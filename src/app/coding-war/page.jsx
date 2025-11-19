@@ -1,15 +1,14 @@
 'use client'
 
-import { useState, useEffect } from "react";
-
+import { useState } from "react";
+import code from "public/codes.json";
 
 
 export default function CodingWarPage() {
-  const originalText = "Console.log();\nconst key;";
-  
+  const originalText = code[0].code;
+  console.log(originalText)
   const [cursorPosition, setCursorPosition] = useState(0);
   const [typedText, setTypedText] = useState(originalText.split(""));
-
 
   const handleKeyDown = (e) => {
     const key = e.key;
