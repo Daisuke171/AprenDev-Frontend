@@ -1,11 +1,13 @@
 'use client'
 
 import { useState } from "react";
+import "./styles.css";
 import code from "public/codes.json";
+import planets from "public/astronomy.json";
 
+const originalText = planets[0].text;
 
 export default function CodingWarPage() {
-  const originalText = code[0].code;
 
   const [cursorPosition, setCursorPosition] = useState(0);
   const [newBasePosition, setnewBasePosition] = useState(0);
@@ -17,15 +19,42 @@ export default function CodingWarPage() {
     // Ignore control keys
     if (key.length > 1 && key != "Enter" && key != "Backspace") return;
 
+    // Change level
+    if (cursorPosition == originalText.length){
+      // change level and reset cursor position
+      return;
+    }
+
     console.log(key)
 
     if (key == "Enter"){
-      const nextIndex = typedText.indexOf("\n", newBasePosition + 1);
-      
-      setCursorPosition(nextIndex + 1);
-      setnewBasePosition(nextIndex + 1);
+      let nextIndex = typedText.indexOf("\n", newBasePosition + 1);
+
+      // No more newlines → go to end
+      if (nextIndex === -1) {
+        nextIndex = code.length - 1;
+        return;
+      }
+
+      // Handle multiple empty lines
+      while (originalText[nextIndex + 1] === "\n") {
+        nextIndex++;
+      }
+      if(originalText[nextIndex] == "\n" && originalText[nextIndex+1] == " "){
+        let whitespacePos = nextIndex+1;
+        while(originalText[whitespacePos] == " "){
+          nextIndex++;
+          whitespacePos++;
+        }
+      }
+
+      const newPos = nextIndex + 1;
+
+      setCursorPosition(newPos);
+      setnewBasePosition(newPos);
       return;
     }
+
     if (key == "Backspace" && cursorPosition>=newBasePosition){
       if(cursorPosition==newBasePosition){
         resetColor(); 
@@ -34,6 +63,11 @@ export default function CodingWarPage() {
 
       setCursorPosition(cursorPosition-1);
       resetColor(cursorPosition-1);
+      return;
+    }
+
+    // Stop typing when hittin endl
+    if(originalText[cursorPosition] === '\n'){
       return;
     }
 
@@ -70,15 +104,17 @@ export default function CodingWarPage() {
 
   return (
     <main>
-      <h1>Coding War</h1>
-      <p>This is the coding war page</p>
+      <h1>Prototype</h1>
+      <p>This is the page for the typing game</p>
 
       <pre id="textViewer">{typedText}</pre>
       <input 
+        id="inputText"
+        autoFocus
         type="text" 
         onKeyDown={(e) => handleKeyDown(e)}
       ></input>
-      <div>{cursorPosition}</div>
+      <div>position: {cursorPosition}</div>
     </main>
   );
 }
