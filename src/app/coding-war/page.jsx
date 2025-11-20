@@ -6,8 +6,9 @@ import code from "public/codes.json";
 
 export default function CodingWarPage() {
   const originalText = code[0].code;
-  console.log(originalText)
+
   const [cursorPosition, setCursorPosition] = useState(0);
+  const [newBasePosition, setnewBasePosition] = useState(0);
   const [typedText, setTypedText] = useState(originalText.split(""));
 
   const handleKeyDown = (e) => {
@@ -19,12 +20,14 @@ export default function CodingWarPage() {
     console.log(key)
 
     if (key == "Enter"){
-      const endl = typedText.findIndex(char => char === "\n") + 1;
-      setCursorPosition(endl);
+      const nextIndex = typedText.indexOf("\n", newBasePosition + 1);
+      
+      setCursorPosition(nextIndex + 1);
+      setnewBasePosition(nextIndex + 1);
       return;
     }
-    if (key == "Backspace" && cursorPosition>=0){
-      if(cursorPosition==0){
+    if (key == "Backspace" && cursorPosition>=newBasePosition){
+      if(cursorPosition==newBasePosition){
         resetColor(); 
         return;
       }
