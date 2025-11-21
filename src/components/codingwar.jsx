@@ -1,14 +1,12 @@
 'use client'
 
 import { useState } from "react";
-import "./styles.css";
-import code from "public/codes.json";
-import planets from "public/astronomy.json";
+import code from "../assets/codes.json";
+import planets from "../assets/astronomy.json";
 
 const originalText = planets[0].text;
 
 export default function CodingWarPage() {
-
   const [cursorPosition, setCursorPosition] = useState(0);
   const [newBasePosition, setnewBasePosition] = useState(0);
   const [typedText, setTypedText] = useState(originalText.split(""));
