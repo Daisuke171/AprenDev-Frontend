@@ -1,6 +1,6 @@
 import { WSClient } from "./ws.js";
-import "./components/register-form.js";
-import "./components/login-form.js";
+import "../components/register-form.js";
+import "../components/login-form.js";
 
 export const client = new WSClient({
   onOpen: () => {
