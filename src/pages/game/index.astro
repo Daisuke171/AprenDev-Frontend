@@ -1,9 +1,12 @@
 ---
-import CodingWarPage from "../../components/codingwar.jsx"
-import Layout from '../../layouts/Layout.astro';
-
+import Navbar from "../../components/navbar.astro";
+import CodingWarPage from "../../components/codingwar.jsx";
+import Layout from "../../layouts/Layout.astro";
 ---
 
 <Layout>
-	<CodingWarPage client:load/>
+  <Navbar />
+  <CodingWarPage client:load />
 </Layout>
+
+

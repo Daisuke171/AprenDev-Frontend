@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from "react";
+import "../styles/game.css"
 import code from "../assets/codes.json";
 import planets from "../assets/astronomy.json";
 
@@ -102,17 +103,16 @@ export default function CodingWarPage() {
 
   return (
     <main>
-      <h1>Prototype</h1>
-      <p>This is the page for the typing game</p>
-
       <pre id="textViewer">{typedText}</pre>
       <input 
         id="inputText"
         autoFocus
         type="text" 
+        placeholder="Escriba Aqui"
         onKeyDown={(e) => handleKeyDown(e)}
       ></input>
-      <div>position: {cursorPosition}</div>
+      {/* <div>position: {cursorPosition}</div> */}
     </main>
   );
 }
+
