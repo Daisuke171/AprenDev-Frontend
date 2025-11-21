@@ -1,11 +1,12 @@
 ---
-import "../scripts/app.js";
+import AuthLayout from "@layouts/AuthLayout.astro";
+import LoginForm from "@components/loginForm.jsx";
 ---
-<html>
-  <body>
-    <login-form></login-form>
-  </body>
-</html>
+
+<AuthLayout title="Iniciar sesión">
+  <LoginForm client:load />
+</AuthLayout>
+
 
 
 <style>

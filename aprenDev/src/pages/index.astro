@@ -1,11 +1,24 @@
 ---
-import Test from '../components/Test.astro';
-import TestLayout from '../layouts/TestLayout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+import AuthLayout from "@layouts/AuthLayout.astro";
+import Test from "@components/Test.astro";
+import RegisterForm from "@components/registerForm.jsx";
+import LoginForm from "@components/loginForm.jsx";
+import App from "@components/App.jsx";
 ---
 
-<TestLayout>
-	<Test />
-</TestLayout>
+<AuthLayout title="WS + Redis test">
+  <section>
+    <Test />
+    <App client:load />
+  </section>
+
+  <section>
+    <h2>Registro</h2>
+    <RegisterForm client:load />
+  </section>
+
+  <section>
+    <h2>Login</h2>
+    <LoginForm client:load />
+  </section>
+</AuthLayout>
