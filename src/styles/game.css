@@ -1,0 +1,25 @@
+main{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#textViewer {
+  max-width: 80%;
+  color: #fff;
+  font-size: 1.5rem;
+  border-radius: 20px;
+  padding: 1rem;
+  border: black 1px solid;
+  background-color: oklch(0.2429 0.1162 277.23);
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
+}
+
+#inputText {
+  width: 85%;
+  padding: 1rem;
+  border-radius: 10px;
+  box-sizing: border-box;
+}
