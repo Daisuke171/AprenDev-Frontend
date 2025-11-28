@@ -1,11 +1,14 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { client } from "@scripts/client.js";
 
 export default function App() {
-  const [status, setStatus] = useState(false);
+  //status guarda el estado de la coneccion con el servidor, setStatus actualiza el estado
+  const [status, setStatus] = useState();
+  //logLines es un array almacena los mensajes de log que se muestran en la consola
   const [logLines, setLogLines] = useState([]);
-  const canvasRef = useRef(null);
 
+  //reasignamos los handlers de client.js para que actualicen el estado y el log
+  //useefect engancha los handlers con los estados para que la coneccion se refleje en la interfaz
   useEffect(() => {
     client.handlers.onOpen = () => {
       setStatus(true);
@@ -20,22 +23,18 @@ export default function App() {
       setStatus(false);
       addLog("WS desconectado");
     };
+    client.handlers.onUndefined = (undefined) => {
+      setStatus(undefined);
+      addLog("WS undefined");
+    }
     client.handlers.onError = (err) => {
       setStatus(false);
       addLog("WS error:", err);
     };
+  }, []);
 
-    // dibujar círculo de estado
-    if (canvasRef.current) {
-      const ctx = canvasRef.current.getContext("2d");
-      ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
-      ctx.beginPath();
-      ctx.arc(60, 60, 40, 0, Math.PI * 2);
-      ctx.fillStyle = status ? "#39b54a" : "#d9534f";
-      ctx.fill();
-    }
-  }, [status]);
-
+  //funcion que agrega un mensaje a logLines
+  //transforma el objeto en un json string si es un objeto
   function addLog(...args) {
     const line =
       typeof args[1] === "object"
@@ -44,19 +43,10 @@ export default function App() {
     setLogLines((prev) => [...prev, line]);
   }
 
+  //se guardan los addlogs en loglines
   return (
     <div>
-      <canvas ref={canvasRef} width="120" height="120"></canvas>
-      <p>{status ? "WS: conectado" : "WS: desconectado"}</p>
-      <pre>{logLines.join("\n")}</pre>
-      <button onClick={() => client.send("ping")}>Ping</button>
-      <button
-        onClick={() =>
-          client.send("logout", { username: window.lastUser || "reanito" })
-        }
-      >
-        Logout
-      </button>
+      <pre>{logLines.join("\n")}</pre> 
     </div>
   );
 }

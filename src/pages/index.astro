@@ -1,14 +1,13 @@
 ---
 import AuthLayout from "@layouts/AuthLayout.astro";
-import Test from "@components/Test.astro";
 import RegisterForm from "@components/registerForm.jsx";
 import LoginForm from "@components/loginForm.jsx";
 import App from "@components/App.jsx";
 ---
 
 <AuthLayout title="WS + Redis test">
+  <!-- client:load hidrata el componente para activar el websocket -->
   <section>
-    <Test />
     <App client:load />
   </section>
 
