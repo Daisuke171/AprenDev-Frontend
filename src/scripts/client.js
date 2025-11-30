@@ -1,15 +1,15 @@
 import { WSClient } from "./ws.js";
-//handlers es un objeto que guarda los callbacks de eventos
+
 export const client = new WSClient({
   onOpen: () => {
-    console.log("✅ WS conectado");
-    // 👇 recién acá enviás el registro
+    console.log("✅ Socket.IO conectado");
     client.send("register", { username: "stefano" });
   },
-  onMessage: (data) => console.log("Mensaje recibido:", data),
-  onClose: () => console.log("WS desconectado"),
-  onError: (err) => console.error("WS error:", err),
+  onMessage: ({ event, data }) => {
+    console.log(`📩 Evento recibido (${event}):`, data);
+  },
+  onClose: (info) => console.log("❌ Desconectado:", info),
+  onError: (err) => console.error("⚠️ Error Socket:", err),
 });
 
-// Conectamos apenas se importe
 client.connect();
