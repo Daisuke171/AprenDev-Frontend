@@ -1,9 +1,21 @@
 ---
 import LoginForm from "@components/Login.astro";
+import BackBtn from "@components/registerComponents/backBtn.astro";
 import AuthLayout from "@layouts/AuthLayout.astro";
+import Bubble from "@components/registerComponents/bubble.astro";
 ---
 
 <AuthLayout>
-  <h2>Iniciar sesión</h2>
+  <BackBtn />
+  
+
+  <Bubble />
   <LoginForm client:load />
 </AuthLayout>
+
+<style>
+  body {
+    padding: 2rem;
+    background: linear-gradient(150.69deg, #7D63A0 -3.28%, #5A3C92 55.4%, #482D8A 114.09%);
+  }
+</style>
