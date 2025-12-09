@@ -17,3 +17,8 @@
       color 0.3s;
     z-index: 10;
 }
+
+.button-style:hover {
+  background-color: #C87C2A;
+  color: #fff;
+}
