@@ -41,9 +41,8 @@ export default function RegisterForm() {
       if (res.ok && data.user) {
         alert(`✅ Usuario ${data.user.username} registrado correctamente`);
       } else {
-        alert(`❌ Error: ${data.message|| "No se pudo registrar"}`);
+        alert(`❌ Error: ${data.message || "No se pudo registrar"}`);
       }
-
     } catch (err) {
       alert("❌ Error de conexión con el servidor");
       console.error(err);
@@ -72,7 +71,9 @@ export default function RegisterForm() {
         />
 
         <div className="relative bg-[#C9C0DE] w-34 h-20 right-0 -top-55 z-0 rounded-t-2xl flex items-center justify-center">
-          <ClickGlowSpan><a href="/login">Log in</a></ClickGlowSpan>
+          <ClickGlowSpan>
+            <a href="/login">Log in</a>
+          </ClickGlowSpan>
         </div>
 
         <img
@@ -81,9 +82,7 @@ export default function RegisterForm() {
         />
 
         <div className="relative bg-white  w-34 h-20 left-40 -top-84 z-2 rounded-t-2xl flex items-center justify-center">
-          <ClickGlowSpan>
-            Sign up
-          </ClickGlowSpan>
+          <ClickGlowSpan>Sign up</ClickGlowSpan>
         </div>
 
         <section

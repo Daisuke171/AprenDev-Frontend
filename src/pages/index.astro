@@ -1,4 +1,5 @@
 ---
+export const prerender = false;
 import BarMenu from "@components/barMenu.astro";
 import CoursesCards from "@components/coursesCards.astro";
 import Navbar from "@components/navbar.astro";
@@ -7,7 +8,8 @@ import CircleLinks from "src/assets/circleLinks.astro";
 ---
 
 <AuthLayout title="Home">
-  <Navbar navTitle="Hello, User" />
+  <!--se encarga de mostrar el username y el nav -->
+  <Navbar />
 
   <div class="refContainer">
     <CircleLinks
@@ -35,12 +37,13 @@ import CircleLinks from "src/assets/circleLinks.astro";
     <h2>Mis cursos</h2>
 
     <div class="courses">
-      <CoursesCards
-        src=`/html5.png`
-        subtitle=`Introducción
-      a HTML`
-        width="40"
-      />
+      <a href="/course/course-html">
+        <CoursesCards
+          src=`/html5.png`
+          subtitle=`Introducción a HTML`
+          width="40"
+        />
+      </a>
 
       <CoursesCards
         src=`/css3.png`

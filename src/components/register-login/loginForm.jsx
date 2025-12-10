@@ -7,12 +7,14 @@ export default function LoginForm() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
+
   async function handleSubmit(e) {
     e.preventDefault();
 
     try {
       const res = await fetch("http://localhost:3010/auth/login", {
         method: "POST",
+        credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           username: username.trim(),
@@ -25,6 +27,7 @@ export default function LoginForm() {
       if (res.ok && data.ok) {
         alert(`✅ Login exitoso. Bienvenido 👨‍🦲${data.username}`);
         console.log("Token recibido:", data.token);
+        window.location.href = "/";
       } else {
         alert(`❌ Error: ${data.message || "Credenciales inválidas"}`);
       }
