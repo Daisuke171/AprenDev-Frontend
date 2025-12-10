@@ -1,12 +1,12 @@
 ---
+import BarMenu from "@components/barMenu.astro";
+import CoursesCards from "@components/coursesCards.astro";
 import Navbar from "@components/navbar.astro";
 import AuthLayout from "@layouts/AuthLayout.astro";
 import CircleLinks from "src/assets/circleLinks.astro";
 ---
 
 <AuthLayout title="Home">
-  <div id="bgRectangle"></div>
-
   <Navbar navTitle="Hello, User" />
 
   <div class="refContainer">
@@ -30,9 +30,37 @@ import CircleLinks from "src/assets/circleLinks.astro";
       width="45"
     />
   </div>
+
+  <div class="coursesContainer">
+    <h2>Mis cursos</h2>
+
+    <div class="courses">
+      <CoursesCards
+        src=`/html5.png`
+        subtitle=`Introducción
+      a HTML`
+        width="40"
+      />
+
+      <CoursesCards
+        src=`/css3.png`
+        subtitle=`Introducción
+      a CSS`
+        width="40"
+      />
+
+      <CoursesCards src=`/moreIcon.png` subtitle=`Descubrir más` width="40" />
+    </div>
+  </div>
+
+  <BarMenu />
 </AuthLayout>
 
 <style>
+  body {
+    background-color: #f1edfa;
+  }
+
   .refContainer {
     display: flex;
     justify-content: center;
@@ -41,21 +69,21 @@ import CircleLinks from "src/assets/circleLinks.astro";
     margin-top: 3rem;
   }
 
-  #bgRectangle {
-    position: absolute;
-    width: 304.33px;
-    height: 223.96px;
-    left: -8rem;
-    top: 0px;
-
-    background: linear-gradient(
-      330.34deg,
-      rgba(130, 95, 153, 0.2) 7.63%,
-      rgba(139, 101, 145, 0.2) 42.66%,
-      rgba(218, 157, 79, 0.2) 83.06%
-    );
-    opacity: 0.5;
-    border-radius: 120px;
-    transform: rotate(56.93deg);
+  .coursesContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .coursesContainer h2 {
+    align-self: start;
+    margin-left: 1.25rem;
+    color: #24014a;
+    margin-top: 20px;
+    margin-bottom: 5px;
+  }
+  .courses {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
   }
 </style>

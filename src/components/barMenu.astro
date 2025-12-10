@@ -1,0 +1,71 @@
+---
+const { width = "40px", height = "40px" } = Astro.props;
+---
+
+<nav class="barMenu">
+  <div class="iconContainer">
+    <img src="/home.png" alt="Home Icon" />
+    <p>Home</p>
+  </div>
+
+  <div class="iconContainer">
+    <img src="/friends.png" alt="Home Icon" />
+    <p>Social</p>
+  </div>
+
+  <div class="iconContainer">
+    <img src="/trophy.png" alt="Home Icon" />
+    <p>Trofeos</p>
+  </div>
+
+  <div class="iconContainer">
+    <img src="/createCode.png" alt="Home Icon" />
+    <p>Crear</p>
+  </div>
+
+  <div class="iconContainer">
+    <div class="elipseUser"></div>
+    <p>Perfil</p>
+  </div>
+</nav>
+
+<style>
+  .barMenu {
+    background-color: #f1edfa;
+    display: flex;
+    flex-direction: row;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: fit-content;
+    justify-content: space-around;
+    align-items: center;
+  }
+  .barMenu img {
+    width: 40px;
+    height: 40px;
+  }
+  .iconContainer{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+  }
+  .iconContainer p {
+    font-size: 1rem;
+    color: #24014a;
+  }
+
+  .elipseUser {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(
+      156.25deg,
+      #825d97 0%,
+      #ab4afd 50%,
+      #482d8a 100%
+    );
+    border-radius: 50%;
+
+  }
+</style>
