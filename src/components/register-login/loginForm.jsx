@@ -42,34 +42,34 @@ export default function LoginForm() {
       <main className="fixed">
         <img
           src="/textBubble.png"
-          className="relative w-60 left-35 bottom-10 z-1"
+          className="relative w-40 left-35 bottom-0 z-1"
         ></img>
 
         <img
           src="/monster1.png"
-          className="relative w-48 right-7 bottom-38 z-0 pointer-events-none"
+          className="relative w-48 right-7 bottom-21 z-0 pointer-events-none"
         />
-        <p className="relative bottom-91 left-45 z-5 text-2xl font-semibold text-[#240E59] select-none">
+        <p className="relative bottom-77 left-42 z-5 text-[1rem] font-semibold text-[#240E59] select-none">
           Welcome back!
         </p>
 
-        <div className="relative bg-white w-34 h-20 right-0 -top-75 z-2 rounded-t-2xl flex items-center justify-center">
+        <div className="relative bg-white w-34 h-20 right-0 -top-55 z-2 rounded-t-2xl flex items-center justify-center">
           <ClickGlowSpan>Log in</ClickGlowSpan>
         </div>
 
         <img
           src="/monster1-hands.png"
-          className="relative w-40 right-3 bottom-90 z-3 pointer-events-none"
+          className="relative w-40 right-3 bottom-72 z-3 pointer-events-none"
         />
 
-        <div className="relative bg-[#C9C0DE] w-34 h-20 left-40 -top-104 z-0 rounded-t-2xl flex items-center justify-center">
+        <div className="relative bg-[#C9C0DE] w-34 h-20 left-40 -top-84 z-0 rounded-t-2xl flex items-center justify-center">
           <ClickGlowSpan>
-            <a href="/regiter">Sign up</a>
+            <a href="/register">Sign up</a>
           </ClickGlowSpan>
         </div>
 
         <section
-          className="flex relative bottom-110 right-8 pt-20 bg-white p-6 rounded-t-4xl w-screen overflow-y-auto justify-center"
+          className="flex relative bottom-90 right-8 pt-20 bg-white p-6 rounded-t-4xl w-screen overflow-y-auto justify-center"
           style={{ height: "calc(100svh - 225px)" }}
         >
           <form
@@ -148,7 +148,7 @@ export default function LoginForm() {
                 Forgotten Password?
               </a>
               <button
-                className="button-style w-80 h-[4.2rem] cursor-pointer select-none relative top-10"
+                className="button-style w-70 h-[4.2rem] cursor-pointer select-none relative top-10"
                 type="submit"
               >
                 Login

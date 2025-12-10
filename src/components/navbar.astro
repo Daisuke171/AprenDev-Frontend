@@ -2,11 +2,12 @@
 import Burguer from "../assets/burguer.astro";
 import Bell from "../assets/bell.astro";
 import Logout from "../assets/logout.astro";
+const {navTitle="Home"} = Astro.props;
 ---
 
 <nav>
   <Burguer id="btnBurguer" w="50px" h="50px" />
-  <a id="title">Coding War</a>
+  <a id="navTitle" class="">{navTitle}</a>
   <section id="rightSideNav">
     <Bell id="btnNotifications" w="25px" />
     <Logout id="btnLogout" w="25px" />
@@ -20,6 +21,7 @@ import Logout from "../assets/logout.astro";
     justify-content: space-between;
     align-items: center;
     margin: 10px;
+    margin-right: 20px;
   }
 
   #rightSideNav {
@@ -27,5 +29,11 @@ import Logout from "../assets/logout.astro";
     align-items: center;
     width: fit-content;
     gap: 15px;
+  }
+
+  #navTitle {
+    font-size: 24px;
+    font-weight: 600;
+    color: #240E59;
   }
 </style>
