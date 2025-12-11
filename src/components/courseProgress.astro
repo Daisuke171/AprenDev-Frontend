@@ -6,6 +6,7 @@ const {} = Astro.props;
   <div class="progressDetails">
     <div class="textProgress">
       <h3>Continue learning...</h3>
+      <img src="/bookStar.png" alt="book" />
       <div class="progressBar">
         <div class="progressFillScale" style="--p:0.9;"></div> 
         <!-- 1.7 == 100% -->
@@ -162,5 +163,13 @@ const {} = Astro.props;
   .button-style:hover {
     background-color: #c87c2a;
     color: #fff;
+  }
+
+  .textProgress img {
+    position: absolute;
+    width: 50px;
+    margin-left: 0.5rem;
+    left: 125px;
+    top: 0px;
   }
 </style>

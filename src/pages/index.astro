@@ -58,6 +58,10 @@ import CircleLinks from "src/assets/circleLinks.astro";
     <CourseProgress />
   </div>
 
+  <button type="button" class="allCoursesBTN">
+    <p>Ver todos los cursos</p>
+  </button>
+
   <BarMenu />
 </AuthLayout>
 
@@ -99,5 +103,83 @@ import CircleLinks from "src/assets/circleLinks.astro";
     display: flex;
     justify-content: center;
     align-items: center;
+  }
+
+  .allCoursesBTN {
+    position: relative;
+    width: 90%;
+    max-width: 400px;
+    --progress-container-width: 90%;
+    height: fit-content;
+    background: #f1edfa;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    padding: 1rem;
+    transition: transform 0.2s;
+    box-shadow: 2px 4px 10px #d5c1fa;
+    border-radius: 20px;
+    overflow: hidden;
+    z-index: 2;
+    margin: 0 auto;
+
+    /* dejar espacio para el "borde" interno */
+    z-index: 0;
+    background-clip: padding-box; /* importante */
+  }
+
+  .allCoursesBTN::before {
+    content: "";
+    position: absolute;
+    inset: 0; /* ocupa todo el elemento */
+    padding: 2px; /* grosor del borde */
+    border-radius: inherit; /* respeta el mismo radius */
+    background: linear-gradient(
+      156.25deg,
+      #825d97 0%,
+      #ab4afd 50%,
+      #482d8a 100%
+    );
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  .allCoursesBTN p {
+    font-size: 1.25rem;
+    font-family: "Raleway";
+    font-weight: 700;
+
+    background: linear-gradient(90deg, #b969ff 0%, #ab4afd 50%, #b969ff 100%);
+    background-size: 200%;
+
+    animation: shimmer 5s linear infinite;
+    transition: transform 0.3s ease-in-out;
+
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .allCoursesBTN p:hover {
+    transform: scale(1.05);
+
+    animation: shimmer 1s linear infinite;
+  }
+
+  @keyframes shimmer {
+    0% {
+      background-position: 200% 0;
+    }
+    100% {
+      background-position: -200% 0;
+    }
   }
 </style>
