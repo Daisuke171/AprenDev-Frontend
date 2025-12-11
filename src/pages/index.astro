@@ -33,7 +33,6 @@ import CircleLinks from "src/assets/circleLinks.astro";
 
   <div class="coursesContainer">
     <h2>Mis cursos</h2>
-
     <div class="courses">
       <CoursesCards
         src=`/html5.png`
@@ -71,14 +70,17 @@ import CircleLinks from "src/assets/circleLinks.astro";
 
   .coursesContainer {
     display: flex;
+    width: fit-content;
     flex-direction: column;
     align-items: center;
+    margin-top: 1rem;
+    margin: 0 auto;
   }
   .coursesContainer h2 {
-    align-self: start;
+    align-self: flex-start;
     margin-left: 1.25rem;
     color: #24014a;
-    margin-top: 20px;
+    margin-top: 30px;
     margin-bottom: 5px;
   }
   .courses {
