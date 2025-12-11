@@ -1,0 +1,166 @@
+---
+const {} = Astro.props;
+---
+
+<section class="courseProgress">
+  <div class="progressDetails">
+    <div class="textProgress">
+      <h3>Continue learning...</h3>
+      <div class="progressBar">
+        <div class="progressFillScale" style="--p:0.9;"></div> 
+        <!-- 1.7 == 100% -->
+      </div>
+    </div>
+
+    <div class="progressInfo">
+      <p>Module: HTML</p>
+      <p>Lesson: 3 of 5</p>
+    </div>
+    <button type="button" class="button-style">Continue</button>
+  </div>
+
+  <div class="imagesContainer">
+    <img src="/monster2.png" alt="Progress Icon" />
+    <img src="../bubbleGreen.png" alt="green bubble" />
+  </div>
+  
+</section>
+
+<style>
+  .courseProgress {
+    position: relative;
+    width: 90%;
+    max-width: 400px;
+    --progress-container-width: 90%;
+    height: fit-content;
+    background: #f1edfa;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    padding: 1rem;
+    transition: transform 0.2s;
+    box-shadow: 2px 4px 10px #d5c1fa;
+    border-radius: 20px;
+    margin: 2rem 0;
+    overflow: hidden;
+    z-index: 2;
+
+    /* dejar espacio para el "borde" interno */
+    z-index: 0;
+    background-clip: padding-box; /* importante */
+  }
+
+  .courseProgress::before {
+    content: "";
+    position: absolute;
+    inset: 0; /* ocupa todo el elemento */
+    padding: 2px; /* grosor del borde */
+    border-radius: inherit; /* respeta el mismo radius */
+    background: linear-gradient(
+      156.25deg,
+      #825d97 0%,
+      #ab4afd 50%,
+      #482d8a 100%
+    );
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  .imagesContainer {
+    position: relative;
+  }
+
+  .imagesContainer img {
+    user-select: none;
+  }
+
+  .imagesContainer img:first-child {
+    position: relative;
+    z-index: -2;
+    top: 10px;
+    right: calc(var(--progress-container-width) * (-1) + 120px);
+    width: 160px;
+  }
+
+  .imagesContainer img:last-child {
+    position: absolute;
+    top: 23px;
+    right: calc(var(--progress-container-width) * (-1) + 90px);
+    z-index: -3;
+  }
+
+  .progressDetails {
+    display: flex;
+    flex-direction: column;
+    font-size: 1.5ch;
+    position: relative;
+    height: 100%;
+    gap: 1rem;
+  }
+
+  .progressBar {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 400px;
+    height: 12px;
+    background: #f1edfa;
+    border: 1px solid #F1EDFA;
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 2px 8px rgba(218, 157, 79, 0.5);
+  }
+
+  .progressFillScale {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+    transform-origin: left center;
+    transform: scaleX(var(--p, 0));
+    background: linear-gradient(
+      90deg,
+      #da9d4f 0%,
+      #da9d4f 60%,
+      rgba(248, 242, 242, 0) 61.54%
+    );
+    filter: drop-shadow(0px 1px 5px #da9d4f);
+    border-radius: 10px 0 0 10px;
+    transition: transform 0.25s ease;
+  }
+
+  .button-style {
+    position: relative;
+    padding: 0;
+    display: flex;
+    font-weight: 600;
+    font-size: 1.25rem;
+    justify-content: center;
+    align-items: center;
+    background-color: #da9d4f;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 15px;
+    border: 1px solid #ccc;
+    box-shadow: inset 0 -10px 10px -7px rgba(0, 0, 0, 0.4);
+    transition:
+      background-color 0.3s,
+      color 0.3s;
+    z-index: 10;
+  }
+
+  .button-style:hover {
+    background-color: #c87c2a;
+    color: #fff;
+  }
+</style>

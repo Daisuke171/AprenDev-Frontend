@@ -1,6 +1,7 @@
 ---
 export const prerender = false;
 import BarMenu from "@components/barMenu.astro";
+import CourseProgress from "@components/courseProgress.astro";
 import CoursesCards from "@components/coursesCards.astro";
 import Navbar from "@components/navbar.astro";
 import AuthLayout from "@layouts/AuthLayout.astro";
@@ -13,9 +14,7 @@ import CircleLinks from "src/assets/circleLinks.astro";
 
   <div class="refContainer">
     <CircleLinks
-      gradient=`156.25deg,
-  rgba(171, 74, 253, 0.5) -5.64%,
-  rgba(36, 14, 89, 0.85) 97.97%`
+      gradient=`156.25deg, rgba(171, 74, 253, 0.5) -5.64%, rgba(36, 14, 89, 0.85) 97.97%`
       subtitle="Docs"
       image="/bookStar.png"
       width="60"
@@ -55,6 +54,10 @@ import CircleLinks from "src/assets/circleLinks.astro";
     </div>
   </div>
 
+  <div class="progressContainer">
+    <CourseProgress />
+  </div>
+
   <BarMenu />
 </AuthLayout>
 
@@ -90,5 +93,11 @@ import CircleLinks from "src/assets/circleLinks.astro";
     display: flex;
     flex-direction: row;
     gap: 1rem;
+  }
+
+  .progressContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 </style>
