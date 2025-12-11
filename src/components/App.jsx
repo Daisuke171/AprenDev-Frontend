@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { client } from "@scripts/client.js";
 
+
+
 export default function App() {
   const [status, setStatus] = useState();
   const [logLines, setLogLines] = useState([]);
@@ -46,9 +48,11 @@ export default function App() {
   }
 
   return (
-    <div>
-      <h2>Estado: {status ? "🟢 Conectado" : "🔴 Desconectado"}</h2>
-      <pre>{logLines.join("\n")}</pre>
-    </div>
+  
+      <div>
+        <h2>Estado: {status ? "🟢 Conectado" : "🔴 Desconectado"}</h2>
+        <pre>{logLines.join("\n")}</pre>
+      </div>
+
   );
 }

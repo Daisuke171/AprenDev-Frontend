@@ -2,15 +2,36 @@
 import Burguer from "../assets/burguer.astro";
 import Bell from "../assets/bell.astro";
 import Logout from "../assets/logout.astro";
-const {navTitle="Home"} = Astro.props;
+
+const { title } = Astro.props;
+let navTitle = title ?? "Home";
+
+// Si no hay título explícito y estamos en Home, mostrar el username
+if (!title) {
+  const token = Astro.cookies.get("session_id")?.value;
+  if (token) {
+    const res = await fetch("http://localhost:3010/auth/session", {
+      headers: { cookie: `session_id=${token}` },
+    });
+    if (res.ok) {
+      const data = await res.json();
+      navTitle = `Hola, ${data.username}`;
+    }
+  }
+}
 ---
 
 <nav>
+  <!-- Botón hamburguesa -->
   <Burguer id="btnBurguer" w="50px" h="50px" />
+
+  <!-- Username dinámico-->
   <a id="navTitle" class="">{navTitle}</a>
+
+  <!-- Iconos de notificaciones y logout -->
   <section id="rightSideNav">
     <Bell id="btnNotifications" w="25px" />
-    <Logout id="btnLogout" w="25px" />
+    <Logout id="btnLogout" w="25px" h="25px"/>
   </section>
 </nav>
 
@@ -34,6 +55,20 @@ const {navTitle="Home"} = Astro.props;
   #navTitle {
     font-size: 24px;
     font-weight: 600;
-    color: #240E59;
+    color: #240e59;
   }
 </style>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const btnLogout = document.getElementById("btnLogout");
+    if (btnLogout) {
+      btnLogout.addEventListener("click", async () => {
+        await fetch("http://localhost:3010/auth/logout", {
+          method: "POST",
+          credentials: "include"
+        });
+        window.location.href = "/login";
+      });
+    }
+  });
+</script>
