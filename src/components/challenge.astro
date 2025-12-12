@@ -1,0 +1,22 @@
+---
+const { title = "", paragraph = ""} = Astro.props;
+---
+
+<div class="challenge-container">
+  <h2>{title}</h2>
+  <p>{paragraph}</p>
+
+  <div class="challenge-info">
+    <img src="/vs-star.png" id="vs-star" />
+    <img src="/challenge-bg.png" id="bg-versus" />
+  </div>
+</div>
+
+<style>
+  .challenge-container {
+    width: 90%;
+    margin: 0 auto;
+  }
+
+
+</style>
