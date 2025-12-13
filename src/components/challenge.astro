@@ -1,5 +1,5 @@
 ---
-const { title = "", paragraph = ""} = Astro.props;
+const { title = "", paragraph = "" } = Astro.props;
 ---
 
 <div class="challenge-container">
@@ -7,16 +7,122 @@ const { title = "", paragraph = ""} = Astro.props;
   <p>{paragraph}</p>
 
   <div class="challenge-info">
-    <img src="/vs-star.png" id="vs-star" />
-    <img src="/challenge-bg.png" id="bg-versus" />
+    <img src="/bg-versus.png" id="challenge-bg" />
+    <div class="user-info-container">
+      <div class="challenge-user-img"></div>
+      <p>Tú</p>
+    </div>
+    <div class="user-info-container">
+      <div class="challenge-user-img"></div>
+      <p>Elegir Oponente</p>
+    </div>
   </div>
+
+  <button type="button" class="button-style">INICIAR DESAFÍO</button>
 </div>
 
 <style>
+  h2 {
+    font-style: normal;
+    font-weight: 600;
+    font-size: 2ch;
+    line-height: 25px;
+    color: #240e59;
+    padding-top: 1rem;
+  }
+
+  p {
+    font-style: normal;
+    font-weight: 400;
+    font-size: 1.7ch;
+    line-height: 18px;
+    width: 90%;
+    padding: 0.3rem 0;
+
+    color: #171155;
+  }
+  p:first-of-type {
+    margin-bottom: 0.5rem;
+  }
+
   .challenge-container {
     width: 90%;
     margin: 0 auto;
   }
 
+  .user-info-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+    gap: 0.5rem;
+    margin-left: 17%;
+  }
+  .user-info-container p {
+    font-style: normal;
+    font-weight: 500;
+    font-size: 1.5ch;
+    text-align: center;
+    padding-top: 11px;
+    color: #ffffff;
+  }
 
+  .challenge-info {
+    position: relative;
+    display: flex;
+    width: 100%;
+    height: auto;
+  }
+
+  #challenge-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    width: 100%;
+
+  }
+
+  .challenge-user-img {
+    width: 3.5rem;
+    height: 3.5rem;
+    background: #ccc;
+    border-radius: 50%;
+    position: relative;
+
+    top: 1rem;
+  }
+
+  .user-info-container {
+    margin-right: auto;
+  }
+
+  .button-style {
+    width: 90%;
+    padding: 0.4rem 0;
+    font-weight: 600;
+    font-size: 1.25rem;
+    justify-content: center;
+    align-items: center;
+    background-color: #da9d4f;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 15px;
+    border: 1px solid #ccc;
+    box-shadow: inset 0 -10px 10px -7px rgba(0, 0, 0, 0.4);
+    transition:
+      background-color 0.3s,
+      color 0.3s;
+    z-index: 10;
+
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: 0.5rem;
+  }
+
+  .button-style:hover {
+    background-color: #c87c2a;
+    color: #fff;
+  }
 </style>
