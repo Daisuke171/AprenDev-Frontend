@@ -7,6 +7,20 @@ import Challenge from "@components/challenge.astro";
 
 <AuthLayout>
   <Navbar title="Comunidad" />
+
+  <section id="community-tab">
+    <div class="tabs">
+      <a>
+        <p>PRÁCTICA</p>
+      </a>
+    </div>
+    <div class="tabs">
+      <a>
+        <p>ACTIVIDAD</p>
+      </a>
+    </div>
+  </section>
+
   <section class="inviteFriends">
     <div class="imagesContainer">
       <img src="/blueBubble.png" id="blueBubble" />
@@ -19,13 +33,47 @@ import Challenge from "@components/challenge.astro";
     </div>
   </section>
 
-  <Challenge title="Desafío de código" paragraph="Elige tu lenguaje de programación y selecciona a un oponente para probar tu poder" />
+  <Challenge
+    title="Desafío de código"
+    paragraph="Elige tu lenguaje de programación y selecciona a un oponente para probar tu poder"
+  />
+
   <BarMenu />
 </AuthLayout>
 
 <style>
   body {
     background: #f1edfa;
+  }
+
+  #community-tab {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    background-color: #c9c0de;
+    height: 70px;
+    margin-bottom: 1rem;
+  }
+  .tabs {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50%;
+    height: 100%;
+    border-bottom: 4px solid #240E59;
+    cursor: pointer;
+  }
+  .tabs:first-child {
+    background-color: #f1edfa;
+  }
+  .tabs:nth-child(2) {
+    border-bottom: none;
+  }
+  
+  .tabs a p {
+    font-weight: 600;
+    font-size: 1.4rem;
+    color: #240e59;
   }
 
   .inviteFriends {
@@ -108,7 +156,7 @@ import Challenge from "@components/challenge.astro";
   .container-title {
     font-style: normal;
     font-weight: 400;
-    font-size: 1.80ch;
+    font-size: 1.8ch;
     line-height: 19px;
     text-align: center;
     text-wrap-mode: pretty;
