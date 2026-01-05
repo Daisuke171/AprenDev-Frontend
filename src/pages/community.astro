@@ -10,34 +10,38 @@ import Challenge from "@components/challenge.astro";
 
   <div class="content">
     <section id="community-tab">
-    <div class="tabs">
-      <a href="/community">
-        <p>PRÁCTICA</p>
-      </a>
-    </div>
-    <div class="tabs">
-      <a href="/feed">
-        <p>ACTIVIDAD</p>
-      </a>
-    </div>
-  </section>
+      <div class="tabs">
+        <a href="/community">
+          <p>PRÁCTICA</p>
+        </a>
+      </div>
+      <div class="tabs">
+        <a href="/activity">
+          <p>ACTIVIDAD</p>
+        </a>
+      </div>
+    </section>
 
-  <section class="inviteFriends">
-    <div class="imagesContainer">
-      <img src="/blueBubble.png" id="blueBubble" />
-      <img src="/monsterFriends.png" id="monsterFriends" alt="Invite Friends" />
-    </div>
+    <section class="inviteFriends">
+      <div class="imagesContainer">
+        <img src="/blueBubble.png" id="blueBubble" />
+        <img
+          src="/monsterFriends.png"
+          id="monsterFriends"
+          alt="Invite Friends"
+        />
+      </div>
 
-    <div class="textContainer">
-      <p class="container-title">Comparte la diversión ¡Invita a un amigo!</p>
-      <button type="button" class="button-style">INVITAR AHORA</button>
-    </div>
-  </section>
+      <div class="textContainer">
+        <p class="container-title">Comparte la diversión ¡Invita a un amigo!</p>
+        <button type="button" class="button-style">INVITAR AHORA</button>
+      </div>
+    </section>
 
-  <Challenge
-    title="Desafío de código"
-    paragraph="Elige tu lenguaje de programación y selecciona a un oponente para probar tu poder"
-  />
+    <Challenge
+      title="Desafío de código"
+      paragraph="Elige tu lenguaje de programación y selecciona a un oponente para probar tu poder"
+    />
   </div>
 
   <BarMenu />
@@ -70,7 +74,7 @@ import Challenge from "@components/challenge.astro";
     justify-content: center;
     width: 50%;
     height: 100%;
-    border-bottom: 4px solid #240E59;
+    border-bottom: 4px solid #240e59;
     cursor: pointer;
   }
   .tabs:first-child {
@@ -79,7 +83,7 @@ import Challenge from "@components/challenge.astro";
   .tabs:nth-child(2) {
     border-bottom: none;
   }
-  
+
   .tabs a p {
     font-weight: 600;
     font-size: 1.4rem;
