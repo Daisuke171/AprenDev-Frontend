@@ -1,0 +1,66 @@
+---
+import BarMenu from "@components/barMenu.astro";
+import Navbar from "@components/navbar.astro";
+import AuthLayout from "@layouts/AuthLayout.astro";
+import Challenge from "@components/challenge.astro";
+---
+
+<AuthLayout>
+  <Navbar title="Comunidad" />
+
+  <section id="community-tab">
+    <div class="tabs">
+      <a href="/community">
+        <p>PRÁCTICA</p>
+      </a>
+    </div>
+    <div class="tabs">
+      <a href="/feed">
+        <p>ACTIVIDAD</p>
+      </a>
+    </div>
+  </section>
+
+
+
+
+  <BarMenu />
+</AuthLayout>
+
+<style>
+  body {
+    background: #f1edfa;
+  }
+
+  #community-tab {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    background-color: #c9c0de;
+    height: 70px;
+    margin-bottom: 1rem;
+  }
+  .tabs {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50%;
+    height: 100%;
+    border-bottom: 4px solid #240E59;
+    cursor: pointer;
+  }
+  .tabs:first-child {
+    border-bottom: none;
+  }
+  .tabs:nth-child(2) {
+    background-color: #f1edfa;
+  }
+  
+  .tabs a p {
+    font-weight: 600;
+    font-size: 1.4rem;
+    color: #240e59;
+  }
+
+  
+</style>

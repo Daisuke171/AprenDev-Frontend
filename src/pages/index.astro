@@ -12,55 +12,57 @@ import CircleLinks from "src/assets/circleLinks.astro";
   <!--se encarga de mostrar el username y el nav -->
   <Navbar />
 
-  <div class="refContainer">
-    <CircleLinks
-      gradient=`156.25deg, rgba(171, 74, 253, 0.5) -5.64%, rgba(36, 14, 89, 0.85) 97.97%`
-      subtitle="Docs"
-      image="/bookStar.png"
-      width="60"
-    />
-    <CircleLinks
-      gradient=`156.25deg, #66E8FF -5.64%, rgba(36, 14, 89, 0.8) 97.97%`
-      subtitle="Code"
-      image="/codeIcon.png"
-    />
-    <CircleLinks
-      gradient=`156.25deg, rgba(254, 84, 112, 0.5) -5.64%, rgba(36, 14, 89, 0.85) 97.97%`
-      subtitle="Games"
-      image="/playIcon.png"
-      width="45"
-    />
-  </div>
+  <div class="content">
+    <div class="refContainer">
+      <CircleLinks
+        gradient=`156.25deg, rgba(171, 74, 253, 0.5) -5.64%, rgba(36, 14, 89, 0.85) 97.97%`
+        subtitle="Docs"
+        image="/bookStar.png"
+        width="60"
+      />
+      <CircleLinks
+        gradient=`156.25deg, #66E8FF -5.64%, rgba(36, 14, 89, 0.8) 97.97%`
+        subtitle="Code"
+        image="/codeIcon.png"
+      />
+      <CircleLinks
+        gradient=`156.25deg, rgba(254, 84, 112, 0.5) -5.64%, rgba(36, 14, 89, 0.85) 97.97%`
+        subtitle="Games"
+        image="/playIcon.png"
+        width="45"
+      />
+    </div>
 
-  <div class="coursesContainer">
-    <h2>Mis cursos</h2>
-    <div class="courses">
-      <a href="/course/course-html">
+    <div class="coursesContainer">
+      <h2>Mis cursos</h2>
+      <div class="courses">
+        <a href="/course/course-html">
+          <CoursesCards
+            src=`/html5.png`
+            subtitle=`Introducción a HTML`
+            width="40"
+          />
+        </a>
+
         <CoursesCards
-          src=`/html5.png`
-          subtitle=`Introducción a HTML`
+          src=`/css3.png`
+          subtitle=`Introducción
+      a CSS`
           width="40"
         />
-      </a>
 
-      <CoursesCards
-        src=`/css3.png`
-        subtitle=`Introducción
-      a CSS`
-        width="40"
-      />
-
-      <CoursesCards src=`/moreIcon.png` subtitle=`Descubrir más` width="40" />
+        <CoursesCards src=`/moreIcon.png` subtitle=`Descubrir más` width="40" />
+      </div>
     </div>
-  </div>
 
-  <div class="progressContainer">
-    <CourseProgress />
-  </div>
+    <div class="progressContainer">
+      <CourseProgress />
+    </div>
 
-  <button type="button" class="allCoursesBTN">
-    <p>Ver todos los cursos</p>
-  </button>
+    <button type="button" class="allCoursesBTN">
+      <p>Ver todos los cursos</p>
+    </button>
+  </div>
 
   <BarMenu />
 </AuthLayout>
@@ -68,6 +70,14 @@ import CircleLinks from "src/assets/circleLinks.astro";
 <style>
   body {
     background-color: #f1edfa;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  .content {
+    flex: 1;
+    padding-top: 80px;
+    padding-bottom: 110px;
   }
 
   .refContainer {
@@ -75,7 +85,6 @@ import CircleLinks from "src/assets/circleLinks.astro";
     justify-content: center;
     align-items: center;
     gap: 2rem;
-    margin-top: 3rem;
   }
 
   .coursesContainer {
