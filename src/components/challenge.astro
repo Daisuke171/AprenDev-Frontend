@@ -1,5 +1,16 @@
 ---
 const { title = "", paragraph = "" } = Astro.props;
+import ModalSelectCategory from "./modalSelectCategory.astro";
+
+const weapons = [
+  { title: "HTML", img: "/icons/html.png" },
+  { title: "CSS", img: "/icons/css.png" },
+  { title: "JavaScript", img: "/icons/js.png" },
+  { title: "Python", img: "/icons/python.png" },
+  { title: "Java", img: "/icons/java.png" },
+  { title: "C Sharp", img: "/icons/csharp.png" },
+  { title: ".NET", img: "/icons/dotnet.png" },
+];
 ---
 
 <div class="challenge-container">
@@ -18,8 +29,10 @@ const { title = "", paragraph = "" } = Astro.props;
     </div>
   </div>
 
-  <button type="button" class="button-style">INICIAR DESAFÍO</button>
+  <button type="button" class="button-style" id="open-modal">INICIAR DESAFÍO</button>
 </div>
+
+<ModalSelectCategory items={weapons} open={true} />
 
 <style>
   #challenge-title {
@@ -107,3 +120,12 @@ const { title = "", paragraph = "" } = Astro.props;
     color: #fff;
   }
 </style>
+
+<script>
+  const openBtn = document.getElementById("open-modal");
+  const modal = document.getElementById("weapon-modal");
+
+  openBtn?.addEventListener("click", () => {
+    modal.classList.remove("hidden");
+  });
+</script>
