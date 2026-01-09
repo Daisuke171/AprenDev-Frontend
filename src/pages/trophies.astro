@@ -1,0 +1,66 @@
+---
+import BarMenu from "@components/barMenu.astro";
+import Navbar from "@components/navbar.astro";
+import TrophiesProgress from "@components/trophiesProgress.astro";
+import AuthLayout from "@layouts/AuthLayout.astro";
+
+
+---
+
+<AuthLayout title="Trophies">
+  <Navbar title="Trofeos" />
+
+  <TrophiesProgress />
+
+  <img src="/trophyGolden.png" alt="Trophy" />
+
+  <p class="cta-trophy">
+    ¡Completa una lección o gana XP para unirte a la Clasificación de esta semana!
+  </p>
+
+  <button type="button" class="button-style">VAMOS A APRENDER</button>
+
+  <BarMenu />
+</AuthLayout>
+  
+<style>
+  body {
+    background-color: #f1edfa;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+.cta-trophy{
+font-family: 'Raleway';
+font-style: normal;
+font-weight: 700;
+font-size: 20px;
+line-height: 18px;
+text-align: center;
+
+color: #171155;
+}
+
+
+
+
+
+.button-style {
+    background: #da9d4f;
+    font-style: normal;
+    font-weight: 800;
+    font-size: 1.5ch;
+    color: #f1edfa;
+    width: 100%;
+    height: 46px;
+    box-shadow: inset 0px -4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+  }
+
+  .button-style:hover {
+    background-color: #c87c2a;
+    color: #fff;
+  }
+
+</style>

@@ -1,0 +1,31 @@
+---
+const { tierImg, tierTitle, exp, thunder, tierArr = [] } = Astro.props;
+---
+
+<div>
+  <section>
+    <img src={tierImg} alt={tierTitle} />
+    <h3>{tierTitle}</h3>
+    <div>
+      <p>{thunder}</p>
+    </div>
+    <div>
+      <p>{exp} XP</p>
+    </div>
+  </section>
+
+  <section>
+    <ul class="list">
+      {tierArr.map((item) => (
+        <li class="card">
+          <img src={item.img} alt={item.title} />
+          <span>{item.title}</span>
+        </li>
+      ))}
+    </ul>
+  </section>
+</div>
+  
+<style>
+
+</style>
