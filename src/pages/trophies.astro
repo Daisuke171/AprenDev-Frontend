@@ -4,25 +4,44 @@ import Navbar from "@components/navbar.astro";
 import TrophiesProgress from "@components/trophiesProgress.astro";
 import AuthLayout from "@layouts/AuthLayout.astro";
 
-
+const items = {
+  tierImg: "/icons/tiers/1-hidrogeno.png",
+  tierTitle: "Hidrogeno",
+  exp: 150,
+  thunder: "50",
+  tierArr: { img: "/icons/tiers/1-hidrogeno.png", title: "Liga Hidrogeno" },
+};
 ---
 
 <AuthLayout title="Trophies">
   <Navbar title="Trofeos" />
 
-  <TrophiesProgress />
+  <div class="content">
+    <TrophiesProgress
+      tierImg={items.tierImg}
+      tierTitle={items.tierTitle}
+      exp={items.exp}
+      thunder={items.thunder}
+      tierObj={items.tierArr}
+    />
 
-  <img src="/trophyGolden.png" alt="Trophy" />
+    <div class="trophyContainer">
+      <img src="/trophyGolden.png" alt="Trophy" class="goldenTrophy" />
+    </div>
 
-  <p class="cta-trophy">
-    ¡Completa una lección o gana XP para unirte a la Clasificación de esta semana!
-  </p>
+    <div class="textContainer">
+      <p class="cta-trophy">
+        ¡Completa una lección o gana XP para unirte a la Clasificación de esta
+        semana!
+      </p>
+    </div>
 
-  <button type="button" class="button-style">VAMOS A APRENDER</button>
+    <button type="button" class="button-style">VAMOS A APRENDER</button>
+  </div>
 
   <BarMenu />
 </AuthLayout>
-  
+
 <style>
   body {
     background-color: #f1edfa;
@@ -31,29 +50,51 @@ import AuthLayout from "@layouts/AuthLayout.astro";
     flex-direction: column;
   }
 
-.cta-trophy{
-font-family: 'Raleway';
-font-style: normal;
-font-weight: 700;
-font-size: 20px;
-line-height: 18px;
-text-align: center;
+  .content {
+    flex: 1;
+    padding-bottom: 110px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 
-color: #171155;
-}
+  .cta-trophy {
+    font-family: "Raleway";
+    font-style: normal;
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 24px;
+    text-align: center;
 
+    color: #171155;
+    margin: 0 auto;
+  }
 
+  .goldenTrophy {
+    width: 260px;
+  }
+  .trophyContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 3rem 0;
+  }
 
+  .textContainer {
+    padding: 0 16px;
+    margin-bottom: 2.6rem;
+    max-width: 320px;
+  }
 
-
-.button-style {
+  .button-style {
     background: #da9d4f;
     font-style: normal;
-    font-weight: 800;
-    font-size: 1.5ch;
+    font-weight: 700;
+    font-size: 2.7ch;
     color: #f1edfa;
-    width: 100%;
-    height: 46px;
+    width: fit-content;
+    height: 60px;
+    padding: 0 30px;
     box-shadow: inset 0px -4px 4px rgba(0, 0, 0, 0.25);
     border-radius: 10px;
   }
@@ -62,5 +103,4 @@ color: #171155;
     background-color: #c87c2a;
     color: #fff;
   }
-
 </style>

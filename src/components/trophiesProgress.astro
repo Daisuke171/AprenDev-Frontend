@@ -1,31 +1,129 @@
 ---
-const { tierImg, tierTitle, exp, thunder, tierArr = [] } = Astro.props;
+const { tierImg, tierTitle, exp, thunder, tierObj = {} } = Astro.props;
+
+
 ---
 
-<div>
-  <section>
-    <img src={tierImg} alt={tierTitle} />
-    <h3>{tierTitle}</h3>
-    <div>
+<div class="content">
+  <section class="tierInfo">
+    <img src={tierImg} class="tierImgs" />
+    <h3>Liga {tierTitle}</h3>
+    <div class="thunderContainer">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M11.5 20L16.36 10.27H13V4L8 13.73H11.5V20ZM12 2C14.75 2 17.1 3 19.05 4.95C21 6.9 22 9.25 22 12C22 14.75 21 17.1 19.05 19.05C17.1 21 14.75 22 12 22C9.25 22 6.9 21 4.95 19.05C3 17.1 2 14.75 2 12C2 9.25 3 6.9 4.95 4.95C6.9 3 9.25 2 12 2Z" fill="#482D8A"/> </svg>
       <p>{thunder}</p>
     </div>
-    <div>
+    <div class="expContainer">
       <p>{exp} XP</p>
     </div>
   </section>
 
-  <section>
-    <ul class="list">
-      {tierArr.map((item) => (
-        <li class="card">
-          <img src={item.img} alt={item.title} />
-          <span>{item.title}</span>
-        </li>
-      ))}
-    </ul>
+  <section class="tierLocks">
+    <div class="list">
+
+          <img src={tierObj.img} class="tierImgs" />
+
+        {Array.from({ length: 5 }).map(() => (
+          <div class="lock-container">
+            <img src="/lock.png" class="tierImgs" />
+          </div>
+        ))}
+
+    </div>
+    <p>Proxima liga {"Litio"}</p> 
+    <!-- HACER VARIABLE PARA LA PROXIMA TIER -->
   </section>
 </div>
   
 <style>
+  .content{
+    padding-top: 80px;
 
+  }
+  .tierInfo {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 24px;
+    padding: 0 16px;
+  }
+
+  .tierImgs{
+    width: 40px;
+    height: 40px;
+  }
+
+  .tierLocks{
+    padding: 0 16px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+  }
+
+  .tierLocks p{
+    margin-top: 12px;
+    text-align: center;
+    font-family: 'Raleway';
+    font-style: normal;
+    font-weight: 300;
+    font-size: 18px;
+    line-height: 14px;
+    color: #240E59;
+  }
+
+  .tierLocks img{
+    width: 50px;
+    height: 50px;
+  }
+  .tierLocks .lock-container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #E0D7F6;
+    width: 50px;
+    height: 50px;
+    border-radius: 8px;
+    border: 1px solid rgba(139, 101, 145, 0.81);
+    box-sizing: border-box;
+
+  }
+  .tierLocks .lock-container img{
+    width: 32px;
+    height: 32px;
+  }
+
+  .tierLocks .list{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 15px;
+  }
+
+  .expContainer{
+    font-family: 'Raleway';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 20px;
+    background-color: rgba(71, 45, 138, 0.25);
+    color: rgb(71, 45, 138);
+    width: fit-content;
+    padding: 4px 8px;
+    border-radius: 8px;
+  }
+
+  .thunderContainer{
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-family: 'Raleway';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 20px;
+    background-color: rgba(71, 45, 138, 0.25);
+    color: rgb(71, 45, 138);
+    width: fit-content;
+    padding: 4px 8px;
+    border-radius: 8px;
+  }
 </style>
