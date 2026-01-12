@@ -22,11 +22,7 @@ import ModalCourse from "@components/modalCourse.astro";
         width="60"
         id="circleCourses"
       />
-      <CircleLinks
-        gradient=`156.25deg, #66E8FF -5.64%, rgba(36, 14, 89, 0.8) 97.97%`
-        subtitle="Code"
-        image="/codeIcon.png"
-      />
+   
       <CircleLinks
         gradient=`156.25deg, rgba(254, 84, 112, 0.5) -5.64%, rgba(36, 14, 89, 0.85) 97.97%`
         subtitle="Games"
@@ -40,18 +36,19 @@ import ModalCourse from "@components/modalCourse.astro";
       <div class="courses">
         <a href="/course/course-html">
           <CoursesCards
-            src=`/html5.png`
-            subtitle=`Introducción a HTML`
+            src=`/abecedario.png`
+            subtitle=`abecedario`
             width="40"
           />
         </a>
 
         <CoursesCards
-          src=`/css3.png`
-          subtitle=`Introducción
-      a CSS`
+          src=`/silaba.png`
+          subtitle=`Silabas`
           width="40"
         />
+
+       
 
         <CoursesCards src=`/moreIcon.png` subtitle=`Descubrir más` width="40" />
       </div>
@@ -68,9 +65,9 @@ import ModalCourse from "@components/modalCourse.astro";
 
   <ModalCourse id="modalCursos" title="Cursos disponibles">
     <ul>
-      <li><a href="">Programación 👨‍💻</a></li>
+      <li><a href="index.html">Programación 👨‍💻</a></li>
       <li><a href="index-matematicas">Matemáticas ➖➕</a></li>
-      <li><a href="index-lengua">Prácticas del Lenguaje 📚</a></li>
+      <li><a href="">Prácticas del Lenguaje 📚</a></li>
     </ul>
   </ModalCourse>
 
