@@ -1,33 +1,14 @@
 ---
 import BarMenu from "@components/barMenu.astro";
-import Lessons from "@components/lessons.astro";
 import Navbar from "@components/navbar.astro";
 import AuthLayout from "@layouts/AuthLayout.astro";
+import LessonLayout from "@layouts/LessonLayout.astro";
 ---
 
 <AuthLayout title="HTML - Lesson 1">
   <Navbar title="Cursos" />
 
-  <!-- PARA LAYOUT -->
-  <div class="content">
-    <div class="navigation">
-      <a href="/course/html" class="back-button">
-        <svg
-          width="25"
-          height="25"
-          viewBox="0 0 13 21"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M13 18.5325L4.96491 10.5L13 2.4675L10.5263 0L0 10.5L10.5263 21L13 18.5325Z"
-            fill="#FFFFFF"></path>
-        </svg>
-      </a>
-
-      <h2>HTML - Lección 1</h2>
-    </div>
-
+  <LessonLayout title="HTML - Lección 1">
     <section class="lesson">
       <h1>¿Qué es HTML?</h1>
       <p>
@@ -77,68 +58,12 @@ import AuthLayout from "@layouts/AuthLayout.astro";
 
       <button type="button" class="button-style">SIGUIENTE</button>
     </section>
-  </div>
-  <!-- PARA LAYOUT -->
-
-  <Lessons />
+  </LessonLayout>
 
   <BarMenu />
 </AuthLayout>
 
 <style>
-  body {
-    background-color: #f1edfa;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .navigation {
-    display: flex;
-    justify-items: center;
-    align-items: center;
-    height: 60px;
-  }
-  .content {
-    flex: 1;
-    padding-top: 70px;
-    padding-bottom: 90px;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .navigation h2 {
-    font-family: "Raleway";
-    font-style: normal;
-    text-align: center;
-    flex: 1;
-    font-weight: 700;
-    font-size: 22px;
-    line-height: 19px;
-    color: #240e59;
-  }
-
-  .back-button {
-    width: 50px;
-    height: 50px;
-    padding: 0;
-    margin-left: 20px;
-    position: absolute;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #da9d4f;
-    color: #333;
-    text-decoration: none;
-    border-radius: 15px;
-    border: 1px solid #ccc;
-    box-shadow: inset 0 -10px 10px -7px rgba(0, 0, 0, 0.4);
-    transition:
-      background-color 0.3s,
-      color 0.3s;
-    z-index: -1;
-  }
-
   .lesson {
     display: flex;
     flex-direction: column;
