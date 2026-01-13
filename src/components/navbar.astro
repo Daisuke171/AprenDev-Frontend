@@ -6,7 +6,6 @@ import Logout from "../assets/logout.astro";
 const { title } = Astro.props;
 let navTitle = title ?? "Home";
 
-// Si no hay título explícito y estamos en Home, mostrar el username
 if (!title) {
   const token = Astro.cookies.get("session_id")?.value;
   if (token) {
@@ -22,57 +21,200 @@ if (!title) {
 ---
 
 <nav>
-  <!-- Botón hamburguesa -->
-  <Burguer id="btnBurguer" w="50px" h="50px" />
+  <button id="btnBurguer" aria-label="Open Menu">
+    <Burguer w="35px" h="35px" />
+  </button>
 
-  <!-- Username dinámico-->
-  <a id="navTitle" class="">{navTitle}</a>
+  <a id="navTitle">{navTitle}</a>
 
-  <!-- Iconos de notificaciones y logout -->
   <section id="rightSideNav">
-    <Bell id="btnNotifications" w="25px" />
-    <Logout id="btnLogout" w="25px" h="25px"/>
+    <button class="icon-btn"><Bell w="22px" /></button>
+    <button id="btnLogout" class="icon-btn"><Logout w="22px" h="22px" /></button>
   </section>
 </nav>
 
+<div id="menuOverlay"></div>
+
+<aside id="sideMenu">
+  <div class="menu-content">
+    <div class="menu-section">
+      <p class="section-label">Main Navigation</p>
+      <a href="/dashboard">Dashboard</a>
+      <a href="/projects">My Projects</a>
+      <a href="/analytics">Analytics</a>
+    </div>
+
+    <div class="menu-section">
+      <p class="section-label">Account</p>
+      <a href="/profile">Profile Settings</a>
+      <a href="/billing">Billing</a>
+      <a href="/notifications">Notifications</a>
+    </div>
+
+    <div class="menu-section">
+      <p class="section-label">Support</p>
+      <a href="/help">Help Center</a>
+      <a href="/docs">Documentation</a>
+    </div>
+  </div>
+  
+  <div class="menu-footer">
+    <p>Version 2.0.4</p>
+  </div>
+</aside>
+
 <style>
+  /* Navigation Bar */
   nav {
     display: flex;
-    flex-direction: row;
     position: fixed;
     top: 0;
     width: 100%;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 20px;
+    padding: 0.75rem 1.5rem;
     background: #f1edfa;
-    z-index: 10;
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    z-index: 100;
+  }
+
+  #btnBurguer, .icon-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    transition: transform 0.2s ease;
+  }
+
+  #btnBurguer:hover { transform: scale(1.1); }
+
+  #navTitle {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #240e59;
+    letter-spacing: -0.5px;
   }
 
   #rightSideNav {
     display: flex;
-    align-items: center;
-    width: fit-content;
-    gap: 15px;
+    gap: 10px;
   }
 
-  #navTitle {
-    font-size: 24px;
-    font-weight: 600;
-    color: #240e59;
+  /* Overlay - Darker and blurrier */
+  #menuOverlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 7, 34, 0.3);
+    backdrop-filter: blur(4px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1001;
+  }
+
+  /* Side menu - Glassmorphism Style */
+  #sideMenu {
+    position: fixed;
+    top: 0;
+    left: -320px;
+    width: 300px;
+    height: 100vh;
+    /* The Glass Effect */
+    background: rgba(36, 14, 89, 0.7); 
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    
+    padding: 100px 30px 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1001;
+  }
+
+  #sideMenu.open {
+    transform: translateX(320px);
+  }
+
+  #menuOverlay.open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* Menu Content Styling */
+  .menu-section {
+    margin-bottom: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .section-label {
+    color: rgba(255, 255, 255, 0.5);
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    margin-bottom: 5px;
+  }
+
+  #sideMenu a {
+    color: rgba(255, 255, 255, 0.9);
+    text-decoration: none;
+    font-size: 1.1rem;
+    padding: 8px 12px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    background: rgba(255, 255, 255, 0);
+  }
+
+  #sideMenu a:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    padding-left: 18px;
+  }
+
+  .menu-footer {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.3);
   }
 </style>
+
 <script>
-document.addEventListener("DOMContentLoaded", () => {
+  // Function to initialize logic (useful if you use View Transitions)
+  const initNav = () => {
+    const btn = document.getElementById("btnBurguer");
+    const menu = document.getElementById("sideMenu");
+    const overlay = document.getElementById("menuOverlay");
     const btnLogout = document.getElementById("btnLogout");
-    if (btnLogout) {
-      btnLogout.addEventListener("click", async () => {
+
+    const toggleMenu = (show) => {
+      menu?.classList.toggle("open", show);
+      overlay?.classList.toggle("open", show);
+    };
+
+    btn?.addEventListener("click", () => toggleMenu(true));
+    overlay?.addEventListener("click", () => toggleMenu(false));
+
+    btnLogout?.addEventListener("click", async () => {
+      try {
         await fetch("http://localhost:3010/auth/logout", {
           method: "POST",
-          credentials: "include"
+          credentials: "include",
         });
         window.location.href = "/login";
-      });
-    }
-  });
+      } catch (e) {
+        console.error("Logout failed", e);
+      }
+    });
+  };
+
+  // Runs on initial load
+  initNav();
+  // Runs on View Transitions navigation
+  document.addEventListener("astro:after-swap", initNav);
 </script>
