@@ -1,5 +1,5 @@
 ---
-
+const { user } = Astro.props;
 ---
 
 <div class="post-container">
@@ -8,9 +8,9 @@
 
   <div class="user-img"></div>
   <div class="post-text-container">
-    <h2>Billy Mitchell</h2>
-    <input placeholder="¿En qué estas pensando?"></input>
-    <button class="button-style">Descubrir Compañeros</button>
+    <h2>{user}</h2>
+    <input placeholder="¿En qué estas pensando?" disabled></input>
+    <button class="button-style" id="openModal" onclick="window.dispatchEvent(new Event('open-post-modal'))">Compartir Post</button>
 </div>
 
 <style>

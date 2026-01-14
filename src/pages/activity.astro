@@ -4,6 +4,7 @@ import Navbar from "@components/navbar.astro";
 import AuthLayout from "@layouts/AuthLayout.astro";
 import Challenge from "@components/challenge.astro";
 import Post from "@components/post.astro";
+import ModalPostLarge from "@components/modalPostLarge.astro";
 ---
 
 <AuthLayout>
@@ -24,12 +25,10 @@ import Post from "@components/post.astro";
     </section>
 
     <div class="post">
-      <Post />
+      <Post user="Billy Mitchell" />
+      <ModalPostLarge />
     </div>
   </div>
-
-
-
 
   <BarMenu />
 </AuthLayout>
@@ -61,7 +60,7 @@ import Post from "@components/post.astro";
     justify-content: center;
     width: 50%;
     height: 100%;
-    border-bottom: 4px solid #240E59;
+    border-bottom: 4px solid #240e59;
     cursor: pointer;
   }
   .tabs:first-child {
@@ -70,16 +69,59 @@ import Post from "@components/post.astro";
   .tabs:nth-child(2) {
     background-color: #f1edfa;
   }
-  
+
   .tabs a p {
     font-weight: 600;
     font-size: 1.4rem;
     color: #240e59;
   }
 
-  .post{
+  .post {
     display: flex;
     justify-content: center;
     align-items: center;
   }
 </style>
+
+<script>
+  const modal = document.getElementById("modal");
+  const modalBox = modal.querySelector(".modal");
+  const closeBtn = modal.querySelector(".close-btn");
+
+  // Close when clicking outside
+  modal.addEventListener("click", () => {
+    window.dispatchEvent(new Event("close-post-modal"));
+  });
+
+  // Prevent closing when clicking inside
+  modalBox.addEventListener("click", (e) => {
+    e.stopPropagation();
+  });
+
+  // Close button
+  closeBtn.addEventListener("click", () => {
+    window.dispatchEvent(new Event("close-post-modal"));
+  });
+
+  window.addEventListener("close-post-modal", () => {
+    const modal = document.getElementById("modal");
+    if (!modal) return;
+
+    // Add a closing class to trigger an exit transition
+    modal.classList.add("closing");
+
+    // Wait for the animation to finish (200ms) before hiding
+    setTimeout(() => {
+      modal.style.display = "none";
+      modal.classList.remove("closing");
+    }, 200);
+  });
+
+  window.addEventListener("open-post-modal", () => {
+    const modal = document.getElementById("modal");
+    if (!modal) return;
+
+    modal.style.display = "flex";
+    // The CSS @keyframes will handle the "pop" automatically now
+  });
+</script>
