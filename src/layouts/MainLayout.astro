@@ -1,0 +1,18 @@
+---
+import BarMenu from "@components/barMenu.astro";
+import Navbar from "@components/navbar.astro";
+
+const { title } = Astro.props;
+---
+
+<Navbar title={title} />
+<slot />
+<BarMenu />
+
+<style>
+  body {
+    background-color: #f1edfa;
+    display: flex;
+    flex-direction: column;
+  }
+</style>

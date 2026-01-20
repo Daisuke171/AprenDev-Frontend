@@ -1,0 +1,84 @@
+---
+import AuthLayout from "@layouts/AuthLayout.astro";
+import MainLayout from "@layouts/MainLayout.astro";
+import CodeEditor from "@components/codeEditor.astro";
+import LessonLayout from "@layouts/LessonLayout.astro";
+---
+
+<AuthLayout>
+  <MainLayout title="Cursos">
+    <LessonLayout title="HTML - Lección 4" href="lesson-three">
+      <section class="lesson">
+        <h1>⭐ MINI DESAFÍO</h1>
+        <p>Crea un título que diga “Soy un programador genial” y debajo 2 párrafos contando algo que te guste.</p>
+        <div class="code-editor-container">
+          <CodeEditor
+            initialCode={`<h1>Hello Astro</h1>
+<p>Edit HTML and see it live!</p>`}
+          />
+        </div>
+
+        <a type="button" class="button-style" href="lesson-four">SIGUIENTE</a>
+      </section>
+    </LessonLayout>
+  </MainLayout>
+</AuthLayout>
+
+<style>
+  .lesson {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 0 25px;
+    margin-top: 10px;
+    margin-bottom: 50px;
+    overflow-y: scroll;
+  }
+
+  .lesson h1 {
+    font-family: "Raleway";
+    font-style: normal;
+    font-weight: 700;
+    font-size: 3ch;
+    line-height: 30px;
+    color: #171155;
+    margin-top: 15px;
+    margin-bottom: 10px;
+  }
+
+  .lesson p {
+    font-family: "Raleway";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 1.7ch;
+    line-height: 16px;
+
+    color: #171155;
+  }
+
+  .code-editor-container {
+    margin-top: 30px;
+    width: 100%;
+  }
+
+  .button-style {
+    background: #da9d4f;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 2.7ch;
+    color: #f1edfa;
+    width: fit-content;
+    height: 60px;
+    padding: 0 100px;
+    box-shadow: inset 0px -4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+    margin: 0 auto;
+    margin-top: 20px;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    cursor: pointer;
+  }
+</style>

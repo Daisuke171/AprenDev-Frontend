@@ -1,5 +1,6 @@
 ---
 import BarMenu from "@components/barMenu.astro";
+import CodeEditor from "@components/codeEditor.astro";
 import Navbar from "@components/navbar.astro";
 import AuthLayout from "@layouts/AuthLayout.astro";
 import LessonLayout from "@layouts/LessonLayout.astro";
@@ -56,7 +57,9 @@ import LessonLayout from "@layouts/LessonLayout.astro";
 <span style="color:#da9d4f;">&lt;/h1&gt;</span> <span style="color:#6a9955;">← se cierra la cajita</span>
 </pre>
 
-      <button type="button" class="button-style">SIGUIENTE</button>
+
+
+      <a type="button" class="button-style" href="lesson-two">SIGUIENTE</a>
     </section>
   </LessonLayout>
 
@@ -147,5 +150,9 @@ import LessonLayout from "@layouts/LessonLayout.astro";
     border-radius: 10px;
     margin: 0 auto;
     margin-top: 20px;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    cursor: pointer;
   }
 </style>
