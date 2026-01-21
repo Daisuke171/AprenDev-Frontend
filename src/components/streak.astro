@@ -1,0 +1,222 @@
+---
+interface Props {
+  currentStreak?: number;
+  longestStreak?: number;
+}
+
+const { currentStreak = 0, longestStreak = 0 } = Astro.props;
+---
+
+<div class="streak-card">
+  <div class="ellipse-left">
+    <svg width="68" height="156" viewBox="0 0 68 156" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M-80 96.3165C-80 137.011 -50.4547 170 -14.0087 170C22.4374 170 68 137.011 68 96.3165C68 55.6223 22.4374 0 -14.0087 0C-50.4547 0 -80 55.6223 -80 96.3165Z" fill="url(#paint0_linear_218_688)" fill-opacity="0.5"></path>
+      <defs>
+        <linearGradient id="paint0_linear_218_688" x1="44.2944" y1="21.0524" x2="-102.208" y2="160.049" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#EAB4F8"></stop>
+          <stop offset="1" stop-color="#4894FE"></stop>
+        </linearGradient>
+      </defs>
+    </svg>
+  </div>
+  
+  <div class="ellipse-right">
+    <svg width="155" height="143" viewBox="0 0 155 143" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 81.0192C0 115.25 30.9427 143 69.1126 143C107.282 143 155 115.25 155 81.0192C155 46.7882 107.282 0 69.1126 0C30.9427 0 0 46.7882 0 81.0192Z" fill="url(#paint0_linear_218_689)" fill-opacity="0.5"></path>
+      <defs>
+        <linearGradient id="paint0_linear_218_689" x1="130.173" y1="17.7088" x2="8.46032" y2="161.482" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#EAB4F8"></stop>
+          <stop offset="1" stop-color="#4894FE"></stop>
+        </linearGradient>
+      </defs>
+    </svg>
+  </div>
+
+  <div class="content">
+    <h3>Racha</h3>
+
+    <div class="main-stat">
+      <p class="label">Racha actual</p>
+      <div class="stat-row">
+        <span class="icon fire-shield gold"></span>
+        <span class="number big">{currentStreak}</span>
+        <span class="unit">días</span>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="footer-stat">
+      <p class="label-small">Racha más larga</p>
+      <div class="stat-row-small">
+        <span class="icon fire-shield purple"></span>
+        <span class="number small">{longestStreak}</span>
+        <span class="unit-small">días</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* --- Main Card Container --- */
+  .streak-card {
+    position: relative;
+    width: 348px;
+    height: 179px;
+    background: #f1edfa;
+    box-shadow: 2px 4px 10px #d5c1fa;
+    border-radius: 20px;
+    overflow: hidden;
+    font-family: "Raleway", sans-serif;
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+    box-sizing: border-box;
+
+    /* REQUIRED FOR BORDER TRICK */
+    background-clip: padding-box;
+    border: 2px solid transparent; 
+  }
+
+  /* --- Gradient Border Pseudo-Element (z-index: 1) --- */
+  .streak-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 20px; 
+    padding: 2px; /* Border width */
+    
+    /* The Gradient Colors */
+    background: linear-gradient(135deg, #825d97 0%, #ab4afd 50%, #482d8a 100%);
+    
+    /* Mask logic */
+    -webkit-mask: 
+      linear-gradient(#fff 0 0) content-box, 
+      linear-gradient(#fff 0 0);
+    mask: 
+      linear-gradient(#fff 0 0) content-box, 
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    
+    pointer-events: none;
+    z-index: 1; /* Sits above background blobs (0), below content (2) */
+  }
+
+  /* --- Background Blobs (z-index: 0) --- */
+  .ellipse-left,
+  .ellipse-right {
+    position: absolute;
+    z-index: 0;
+    opacity: 0.75;
+  }
+
+  .ellipse-left {
+    left: 0;
+    bottom: -10px;
+  }
+  .ellipse-right {
+    right: -50px;
+    top: -100px;
+  }
+
+  /* --- Content (z-index: 2) --- */
+  .content {
+    position: relative;
+    z-index: 2; /* Increased to 2 to stay above the border */
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* --- Typography & Layout (Unchanged) --- */
+  h3 {
+    margin: 0;
+    font-weight: 600;
+    font-size: 16px;
+    color: #240e59;
+  }
+
+  .main-stat {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .label {
+    font-size: 12px;
+    color: #825d97;
+    margin: 0 0 4px 0;
+  }
+
+  .stat-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .number {
+    font-family: "Farsan", cursive;
+    color: #240e59;
+  }
+  .number.big {
+    font-size: 32px;
+  }
+  .number.small {
+    font-size: 20px;
+    color: #825d97;
+  }
+
+  .unit {
+    font-family: "Farsan";
+    font-size: 14px;
+    color: #240e59;
+  }
+
+  .divider {
+    width: 100%;
+    border-bottom: 1px solid #825d97;
+    margin-bottom: 8px;
+  }
+
+  .footer-stat {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .stat-row-small {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .label-small,
+  .unit-small {
+    font-size: 12px;
+    color: #825d97;
+  }
+
+  /* Icons */
+  .icon {
+    display: inline-block;
+    background-color: currentColor;
+    mask-repeat: no-repeat;
+    mask-size: contain;
+    mask-position: center;
+    mask-image: url('data:image/svg+xml;utf8,<svg width="22" height="25" viewBox="0 0 22 25" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0 0V0.594949C0 5.91163 0.490273 10.5704 2.07141 14.5465C3.65266 18.5227 6.3408 21.8 10.6408 24.2826L10.888 24.426L11.1353 24.2826C15.3371 21.8566 18.0307 18.5893 19.6434 14.6043C21.2563 10.6191 21.804 5.92972 21.804 0.594949V0.00669721L21.2239 0.110584C14.4902 1.31398 7.70857 1.45552 0.583244 0.110584L0 0ZM20.8104 1.17334C20.7705 6.19386 20.2141 10.5696 18.7306 14.2351C17.222 17.9626 14.772 20.9741 10.8879 23.2822C6.90606 20.9187 4.46435 17.8996 2.98609 14.1824C1.53431 10.5316 1.02874 6.18706 0.992042 1.18336C7.81958 2.39767 14.3544 2.26784 20.8104 1.17334ZM12.4717 3.73602C7.77286 5.1377 10.3421 8.53632 9.14612 10.3509C7.8933 12.2517 5.31126 11.8888 6.15839 6.94955C2.41825 11.2237 6.02392 18.5733 9.05056 20.4775C8.19995 19.6965 7.63991 18.3665 7.63991 16.857C7.63991 16.4205 7.6879 15.9988 7.77502 15.6013C8.15877 16.6476 9.05457 17.3826 10.0987 17.3826C11.4922 17.3826 12.6216 16.0753 12.6216 14.4625C12.6216 13.9278 12.4974 13.427 12.2804 12.996C13.2944 13.7226 13.9861 15.1786 13.9861 16.857C13.9861 18.1725 13.5606 19.3514 12.8887 20.1496C15.6457 18.4613 18.1351 14.2468 15.6588 9.22852C14.5537 14.9157 9.95802 6.80674 12.4717 3.73602Z" fill="black"/></svg>');
+    -webkit-mask-image: url('data:image/svg+xml;utf8,<svg width="22" height="25" viewBox="0 0 22 25" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0 0V0.594949C0 5.91163 0.490273 10.5704 2.07141 14.5465C3.65266 18.5227 6.3408 21.8 10.6408 24.2826L10.888 24.426L11.1353 24.2826C15.3371 21.8566 18.0307 18.5893 19.6434 14.6043C21.2563 10.6191 21.804 5.92972 21.804 0.594949V0.00669721L21.2239 0.110584C14.4902 1.31398 7.70857 1.45552 0.583244 0.110584L0 0ZM20.8104 1.17334C20.7705 6.19386 20.2141 10.5696 18.7306 14.2351C17.222 17.9626 14.772 20.9741 10.8879 23.2822C6.90606 20.9187 4.46435 17.8996 2.98609 14.1824C1.53431 10.5316 1.02874 6.18706 0.992042 1.18336C7.81958 2.39767 14.3544 2.26784 20.8104 1.17334ZM12.4717 3.73602C7.77286 5.1377 10.3421 8.53632 9.14612 10.3509C7.8933 12.2517 5.31126 11.8888 6.15839 6.94955C2.41825 11.2237 6.02392 18.5733 9.05056 20.4775C8.19995 19.6965 7.63991 18.3665 7.63991 16.857C7.63991 16.4205 7.6879 15.9988 7.77502 15.6013C8.15877 16.6476 9.05457 17.3826 10.0987 17.3826C11.4922 17.3826 12.6216 16.0753 12.6216 14.4625C12.6216 13.9278 12.4974 13.427 12.2804 12.996C13.2944 13.7226 13.9861 15.1786 13.9861 16.857C13.9861 18.1725 13.5606 19.3514 12.8887 20.1496C15.6457 18.4613 18.1351 14.2468 15.6588 9.22852C14.5537 14.9157 9.95802 6.80674 12.4717 3.73602Z" fill="black"/></svg>');
+  }
+  .fire-shield.gold {
+    color: #da9d4f;
+    width: 27px;
+    height: 27px;
+  }
+  .fire-shield.purple {
+    color: #825d97;
+    width: 16px;
+    height: 16px;
+  }
+</style>

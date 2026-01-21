@@ -2,12 +2,8 @@
 import Navbar from "@components/navbar.astro";
 import AuthLayout from "@layouts/AuthLayout.astro";
 import CourseProgress from "@components/courseProgress.astro";
-import Css from "@components/course-progress/css.astro";
-import Js from "@components/course-progress/js.astro";
-import Suma from "@components/course-progress/suma.astro";
-import Resta from "@components/course-progress/resta.astro";
-import Abecedario from "@components/course-progress/abecedario.astro";
-import Silabas from "@components/course-progress/silabas.astro";
+import MinimalCourseProgress from "@components/minimalCourseProgress.astro";
+import Streak from "@components/streak.astro";
 
 const token = Astro.cookies.get("session_id")?.value;
 console.log("Token en perfil:", token);
@@ -24,17 +20,63 @@ if (token) {
     username = data.username;
   }
 }
+
+const courseData = [
+  {
+    name: "JavaScript",
+    done: 8,
+    maxLessons: 10,
+  },
+  {
+    name: "HTML",
+    done: 3,
+    maxLessons: 12,
+  },
+  {
+    name: "CSS",
+    done: 20,
+    maxLessons: 20,
+  },
+];
 ---
 
 <AuthLayout title="Perfil">
   <Navbar transparent={true} title="" />
+
   <div class="profile">
-    <img src="/public/profile-background.png" class="profile-background" />
     <div class="profile-container">
+      <svg
+        width="193"
+        height="269"
+        viewBox="0 0 193 269"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        class="profile-bg-bubble"
+      >
+        <path
+          opacity="0.5"
+          d="M17.0813 2.81599C26.4467 -1.58088 37.4252 -0.787929 46.0616 4.90916L133.532 62.6098C143.719 69.3298 152.783 77.6131 160.392 87.1549L171.402 100.962C201.54 138.759 198.909 193.061 165.257 227.768L149.934 243.57C109.287 285.491 39.0387 272.336 16.3137 218.548C12.7356 210.079 10.6159 201.065 10.0444 191.889L0.0577668 31.5513C-0.699848 19.3876 6.04925 7.99527 17.0813 2.81599Z"
+          fill="url(#paint0_linear_217_555)"></path>
+        <defs>
+          <linearGradient
+            id="paint0_linear_217_555"
+            x1="59.7522"
+            y1="298.996"
+            x2="197.154"
+            y2="96.7543"
+            gradientUnits="userSpaceOnUse"
+          >
+            <stop stop-color="#825F99"></stop>
+            <stop offset="0.464351" stop-color="#8B6591"></stop>
+            <stop offset="1" stop-color="#DA9D4F"></stop>
+          </linearGradient>
+        </defs>
+      </svg>
+
       <div class="profile-picture-container">
         <label for="profile-upload" class="profile-picture-label">
           <img
-            src="/public/image-perfil.png"
+            src="/image-perfil.png"
             alt="Foto de perfil"
             class="profile-picture"
           />
@@ -56,17 +98,11 @@ if (token) {
         />
       </div>
     </div>
-    <div class="streak">
-      <h2 class="title-streak">Racha</h2>
-      <div class="streak-current">
-        <p class="streak-current-title">Racha actual</p>
-        <p class="days-streak">0 dias</p>
-      </div>
-      <div class="streak-longest">
-        <p class="streak-longest-title">racha mas larga</p>
-        <p class="days-longest">2 dias</p>
-      </div>
+
+    <div class="streak-container">
+      <Streak currentStreak={5} longestStreak={12} />
     </div>
+
     <p class="title-progress">Progresos De Cursos</p>
     <div class="course-progress">
       <CourseProgress />
@@ -75,29 +111,30 @@ if (token) {
       <p>Ver todos los cursos</p>
     </button>
   </div>
+
   <div id="coursesModal" class="modal">
     <div class="modal-content">
+      
       <div class="modal-header">
-        <h2 style="margin:0; font-size: 1.4rem; color: #640295;">
-          Progreso de todos los cursos
-        </h2>
-        <span
-          class="close-modal"
-          style="cursor:pointer; font-size: 1.8rem; font-weight: bold;"
-          >&times;</span
-        >
+        <h2>Progreso de todos los cursos</h2>
+        <span class="close-modal">&times;</span>
       </div>
+
       <div class="modal-body">
-        <Css />
-        <Js />
-        <Suma />
-        <Resta />
-        <Abecedario />
-        <Silabas />
+        {
+          courseData.map((course) => (
+            <MinimalCourseProgress
+              name={course.name}
+              done={course.done}
+              maxLessons={course.maxLessons}
+            />
+          ))
+        }
       </div>
     </div>
   </div>
 </AuthLayout>
+
 <script>
   // Obtener el nombre del usuario
   fetch("http://localhost:3010/auth/session", {
@@ -156,50 +193,59 @@ if (token) {
 </script>
 
 <style>
-  /* Mobile: pantallas pequeñas (hasta 767px) */
   .profile {
-    display: grid;
-    grid-auto-rows: minmax(4vh, auto);
-    grid-template-columns: repeat(12, 1fr);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     width: 100%;
-    overflow-x: hidden;
+    z-index: 0;
+  }
+
+  .profile-bg-bubble {
+    position: absolute;
+    top: -50px;
+    left: -50px;
+    width: 200px;
+    height: auto;
+    z-index: -1;
   }
 
   .profile-container {
-    display: grid;
-    grid-template-columns: repeat(12, 1fr);
-    grid-column: 1 / -1;
-    grid-row: 1 / 18;
-    z-index: 2; /* nivel superior al fondo que es z 1*/
+    display: flex;
+    background: linear-gradient(
+      160deg,
+      #7d63a0e9 0%,
+      #785d9ee9 7%,
+      #6a4e98e9 27%,
+      #5a3c92e9 50%,
+      #50348ee9 77%,
+      #482d8ae9 100%
+    );
+    z-index: 2;
     width: 100%;
-  }
-
-  .profile-background {
-    border-radius: 0 0 20px 20px;
-    grid-column: 1 / -1;
-    grid-row: 1 / 18;
-    width: 100%;
-    height: 100%; /* Fuerza a que la imagen respete la altura de las filas 1-18 */
-    object-fit: cover;
-    z-index: 1;
+    border-radius: 0 0 15px 15px;
+    justify-content: center;
+    padding: 70px 0 50px 0;
   }
 
   .profile-picture-container {
-    grid-column: 4 / 10;
-    grid-row: auto;
-    justify-self: center;
-    align-self: center;
     color: white;
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 100%;
   }
 
   .profile-picture {
     border-radius: 50%;
     object-fit: cover;
-    border: solid 2px rgb(0, 0, 0);
+    width: 150px;
+    height: 150px; /* Ensure height matches width for a perfect circle */
+
+    /* --- The Detached Border Effect --- */
+    border: 3px solid white; /* The outer ring */
+    padding: 10px; /* The size of the gap between image and border */
+    background-clip: content-box; /* Optional: ensures background doesn't bleed into the gap */
   }
 
   .profile-upload {
@@ -220,61 +266,80 @@ if (token) {
 
   .followers {
     display: flex;
-    gap: 150px;
+    gap: 50px;
     justify-self: center;
+    margin-top: 20px;
   }
 
-  .streak {
-    grid-row: 18 / auto;
-    grid-column: 1 / -1;
-    border: 2px solid rgb(55, 0, 76);
-    color: rgb(55, 0, 76);
-    margin: 15px;
-    border-radius: 20px;
-    z-index: 2;
-    padding: 15px;
-  }
-
-  .title-streak {
-    font-weight: 700;
-  }
-
-  .streak-current {
-    justify-self: center;
-    margin: 10px;
-  }
-
-  .days-streak {
-    font-size: 2rem;
-    font-weight: bold;
-  }
-
-  .streak-longest {
+  .streak-container {
+    width: 100%;
     display: flex;
-    justify-content: space-between;
-    margin: 0 10px;
+    justify-content: center;
+    margin: 20px 0;
   }
 
   .title-progress {
     font-size: 1.6em;
     font-weight: 750;
-    margin: 20px 0 10px 15px;
     color: #640295;
-    grid-column: 1 / -1;
-    grid-row: auto;
   }
 
   .course-progress {
-    grid-row: auto;
-    grid-column: 1 / -1;
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100%;
   }
 
+  #coursesModal{
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(5px);
+  }
+  .modal-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 30px 50px 30px;
+    border-radius: 20px;
+    background-color: #ffffff;
+    width: 90%;
+    max-width: 600px;
+    max-height: 80vh;
+  }
+  .modal-header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #ffffff !important;
+  }
+  .modal-header h2 {
+    font-size: 1rem;
+    font-weight: 700;
+  }
+  .modal-header .close-modal {
+    cursor: pointer;
+    font-size: 1.8rem;
+    font-weight: bold;
+    padding-left: 20px;
+  }
+  .modal-content .modal-body {
+    margin-top: 10px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding-right: 10px;
+  }
+
   .allCoursesBTN {
-    grid-column: 1 / -1;
     position: relative;
     width: 90%;
     max-width: 500px;
