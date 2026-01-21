@@ -3,8 +3,8 @@ import Burguer from "../assets/burguer.astro";
 import Bell from "../assets/bell.astro";
 import Logout from "../assets/logout.astro";
 
-const { title } = Astro.props;
-let navTitle = title ?? "Home";
+const { title, transparent } = Astro.props; //prop para trasnparente
+let navTitle = title ?? "home";
 
 if (!title) {
   const token = Astro.cookies.get("session_id")?.value;
@@ -14,13 +14,13 @@ if (!title) {
     });
     if (res.ok) {
       const data = await res.json();
-      navTitle = `Hola, ${data.username}`;
+      navTitle = `Hola ${data.username}`;
     }
   }
 }
 ---
-
-<nav>
+<!-- si es true se pone transparente -->
+<nav class={`navbar ${transparent ? "navbar--transparent" : ""}`}> 
   <button id="btnBurguer" aria-label="Open Menu">
     <Burguer w="35px" h="35px" />
   </button>
@@ -29,7 +29,8 @@ if (!title) {
 
   <section id="rightSideNav">
     <button class="icon-btn"><Bell w="22px" /></button>
-    <button id="btnLogout" class="icon-btn"><Logout w="22px" h="22px" /></button>
+    <button id="btnLogout" class="icon-btn"><Logout w="22px" h="22px" /></button
+    >
   </section>
 </nav>
 
@@ -54,7 +55,7 @@ if (!title) {
       <a href="/help">Help Center</a>
     </div>
   </div>
-  
+
   <div class="menu-footer">
     <p>Version 0.6 alpha</p>
   </div>
@@ -72,11 +73,11 @@ if (!title) {
     padding: 0.75rem 1.5rem;
     background: #f1edfa;
     backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
     z-index: 100;
   }
 
-  #btnBurguer, .icon-btn {
+  #btnBurguer,
+  .icon-btn {
     background: transparent;
     border: none;
     cursor: pointer;
@@ -86,7 +87,9 @@ if (!title) {
     transition: transform 0.2s ease;
   }
 
-  #btnBurguer:hover { transform: scale(1.1); }
+  #btnBurguer:hover {
+    transform: scale(1.1);
+  }
 
   #navTitle {
     font-size: 1.2rem;
@@ -120,11 +123,11 @@ if (!title) {
     width: 300px;
     height: 100vh;
     /* The Glass Effect */
-    background: rgba(36, 14, 89, 0.7); 
+    background: rgba(36, 14, 89, 0.7);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border-right: 1px solid rgba(255, 255, 255, 0.1);
-    
+
     padding: 100px 30px 40px;
     display: flex;
     flex-direction: column;
@@ -178,6 +181,11 @@ if (!title) {
   .menu-footer {
     font-size: 0.8rem;
     color: rgba(255, 255, 255, 0.3);
+  }
+
+  .navbar--transparent {
+    background-color: transparent;
+    backdrop-filter: none;
   }
 </style>
 

@@ -5,8 +5,6 @@ const {} = Astro.props;
 <section class="courseProgress">
   <div class="progressDetails">
     <div class="textProgress">
-      <h3>Continue learning...</h3>
-      <img src="/bookStar.png" alt="book" />
       <div class="progressBar">
         <div class="progressFillScale" style="--p:0.9;"></div>
         <!-- 1.7 == 100% -->
@@ -14,15 +12,9 @@ const {} = Astro.props;
     </div>
 
     <div class="progressInfo">
-      <p>Module: HTML</p>
+      <p>Module: Suma</p>
       <p>Lesson: 3 of 5</p>
     </div>
-    <button type="button" class="button-style">Continue</button>
-  </div>
-
-  <div class="imagesContainer">
-    <img src="/monster2.png" alt="Progress Icon" />
-    <img src="../bubbleGreen.png" alt="green bubble" />
   </div>
 </section>
 
@@ -75,29 +67,6 @@ const {} = Astro.props;
     z-index: -1;
   }
 
-  .imagesContainer {
-    position: relative;
-  }
-
-  .imagesContainer img {
-    user-select: none;
-  }
-
-  .imagesContainer img:first-child {
-    position: relative;
-    z-index: -2;
-    top: 10px;
-    right: calc(var(--progress-container-width) * (-1) + 120px);
-    width: 160px;
-  }
-
-  .imagesContainer img:last-child {
-    position: absolute;
-    top: 23px;
-    right: calc(var(--progress-container-width) * (-1) + 90px);
-    z-index: -3;
-  }
-
   .progressDetails {
     display: flex;
     flex-direction: column;
@@ -137,38 +106,5 @@ const {} = Astro.props;
     filter: drop-shadow(0px 1px 5px #da9d4f);
     border-radius: 10px 0 0 10px;
     transition: transform 0.25s ease;
-  }
-
-  .button-style {
-    position: relative;
-    padding: 0;
-    display: flex;
-    font-weight: 600;
-    font-size: 1.25rem;
-    justify-content: center;
-    align-items: center;
-    background-color: #da9d4f;
-    color: #fff;
-    text-decoration: none;
-    border-radius: 15px;
-    border: 1px solid #ccc;
-    box-shadow: inset 0 -10px 10px -7px rgba(0, 0, 0, 0.4);
-    transition:
-      background-color 0.3s,
-      color 0.3s;
-    z-index: 10;
-  }
-
-  .button-style:hover {
-    background-color: #c87c2a;
-    color: #fff;
-  }
-
-  .textProgress img {
-    position: absolute;
-    width: 50px;
-    margin-left: 0.5rem;
-    left: 125px;
-    top: 0px;
   }
 </style>

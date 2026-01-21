@@ -1,0 +1,659 @@
+---
+import Navbar from "@components/navbar.astro";
+import AuthLayout from "@layouts/AuthLayout.astro";
+import CourseProgress from "@components/courseProgress.astro";
+import Css from "@components/course-progress/css.astro";
+import Js from "@components/course-progress/js.astro";
+import Suma from "@components/course-progress/suma.astro";
+import Resta from "@components/course-progress/resta.astro";
+import Abecedario from "@components/course-progress/abecedario.astro";
+import Silabas from "@components/course-progress/silabas.astro";
+
+const token = Astro.cookies.get("session_id")?.value;
+console.log("Token en perfil:", token);
+
+let username = "";
+
+if (token) {
+  const res = await fetch("http://localhost:3010/auth/session", {
+    headers: { cookie: `session_id=${token}` },
+  });
+  if (res.ok) {
+    const data = await res.json();
+    console.log("Respuesta del backend:", data);
+    username = data.username;
+  }
+}
+---
+
+<AuthLayout title="Perfil">
+  <Navbar transparent={true} title="" />
+  <div class="profile">
+    <img src="/public/profile-background.png" class="profile-background" />
+    <div class="profile-container">
+      <div class="profile-picture-container">
+        <label for="profile-upload" class="profile-picture-label">
+          <img
+            src="/public/image-perfil.png"
+            alt="Foto de perfil"
+            class="profile-picture"
+          />
+        </label>
+        <div class="profile-info">
+          <!--    aqui se carga el username y el saludo -->
+          <p id="profile-username" class="profile-username"></p>
+          <p class="profile-level">Nivel 1</p>
+          <div class="followers">
+            <p class="profile-follower">1 seguidor</p>
+            <p class="profile-follow">1 seguidos</p>
+          </div>
+        </div>
+        <input
+          type="file"
+          id="profile-upload"
+          class="profile-upload"
+          accept="image/*"
+        />
+      </div>
+    </div>
+    <div class="streak">
+      <h2 class="title-streak">Racha</h2>
+      <div class="streak-current">
+        <p class="streak-current-title">Racha actual</p>
+        <p class="days-streak">0 dias</p>
+      </div>
+      <div class="streak-longest">
+        <p class="streak-longest-title">racha mas larga</p>
+        <p class="days-longest">2 dias</p>
+      </div>
+    </div>
+    <p class="title-progress">Progresos De Cursos</p>
+    <div class="course-progress">
+      <CourseProgress />
+    </div>
+    <button type="button" class="allCoursesBTN">
+      <p>Ver todos los cursos</p>
+    </button>
+  </div>
+  <div id="coursesModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 style="margin:0; font-size: 1.4rem; color: #640295;">
+          Progreso de todos los cursos
+        </h2>
+        <span
+          class="close-modal"
+          style="cursor:pointer; font-size: 1.8rem; font-weight: bold;"
+          >&times;</span
+        >
+      </div>
+      <div class="modal-body">
+        <Css />
+        <Js />
+        <Suma />
+        <Resta />
+        <Abecedario />
+        <Silabas />
+      </div>
+    </div>
+  </div>
+</AuthLayout>
+<script>
+  // Obtener el nombre del usuario
+  fetch("http://localhost:3010/auth/session", {
+    credentials: "include",
+  })
+    .then((res) => {
+      if (!res.ok) throw new Error("No autorizado");
+      return res.json();
+    })
+    .then((data) => {
+      const name = data.username || "invitado";
+      document.getElementById("profile-username").textContent = `Hola ${name}`;
+    })
+    .catch((err) => {
+      console.error("Error al obtener el nombre:", err);
+      document.getElementById("profile-username").textContent = "Hola invitado";
+    });
+
+  // Cargar la imagen del perfil
+  const uploadInput = document.getElementById(
+    "profile-upload",
+  ) as HTMLInputElement;
+  const profileImg = document.querySelector(
+    ".profile-picture",
+  ) as HTMLImageElement;
+
+  uploadInput.addEventListener("change", (event) => {
+    const target = event.target as HTMLInputElement; // 👈 aquí el cast
+    const file = target.files?.[0];
+    if (file) {
+      const imageUrl = URL.createObjectURL(file);
+      profileImg.src = imageUrl;
+    }
+  });
+
+  const modal = document.getElementById("coursesModal");
+  const btn = document.querySelector(".allCoursesBTN");
+  const span = document.querySelector(".close-modal");
+
+  if (btn && modal) {
+    btn.addEventListener("click", () => {
+      modal.style.display = "flex"; // Usar flex para centrar el modal-content
+      document.body.style.overflow = "hidden"; // Bloquea el scroll del fondo
+    });
+
+    const closeModal = () => {
+      modal.style.display = "none";
+      document.body.style.overflow = "auto";
+    };
+
+    span?.addEventListener("click", closeModal);
+    window.addEventListener("click", (e) => {
+      if (e.target === modal) closeModal();
+    });
+  }
+</script>
+
+<style>
+  /* Mobile: pantallas pequeñas (hasta 767px) */
+  .profile {
+    display: grid;
+    grid-auto-rows: minmax(4vh, auto);
+    grid-template-columns: repeat(12, 1fr);
+    width: 100%;
+    overflow-x: hidden;
+  }
+
+  .profile-container {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-column: 1 / -1;
+    grid-row: 1 / 18;
+    z-index: 2; /* nivel superior al fondo que es z 1*/
+    width: 100%;
+  }
+
+  .profile-background {
+    border-radius: 0 0 20px 20px;
+    grid-column: 1 / -1;
+    grid-row: 1 / 18;
+    width: 100%;
+    height: 100%; /* Fuerza a que la imagen respete la altura de las filas 1-18 */
+    object-fit: cover;
+    z-index: 1;
+  }
+
+  .profile-picture-container {
+    grid-column: 4 / 10;
+    grid-row: auto;
+    justify-self: center;
+    align-self: center;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+
+  .profile-picture {
+    border-radius: 50%;
+    object-fit: cover;
+    border: solid 2px rgb(0, 0, 0);
+  }
+
+  .profile-upload {
+    display: none;
+  }
+
+  .profile-info {
+    text-align: center;
+    font-weight: 600;
+    color: white;
+    width: 100%;
+  }
+
+  .profile-username {
+    font-size: 2rem;
+    margin: 10px 0;
+  }
+
+  .followers {
+    display: flex;
+    gap: 150px;
+    justify-self: center;
+  }
+
+  .streak {
+    grid-row: 18 / auto;
+    grid-column: 1 / -1;
+    border: 2px solid rgb(55, 0, 76);
+    color: rgb(55, 0, 76);
+    margin: 15px;
+    border-radius: 20px;
+    z-index: 2;
+    padding: 15px;
+  }
+
+  .title-streak {
+    font-weight: 700;
+  }
+
+  .streak-current {
+    justify-self: center;
+    margin: 10px;
+  }
+
+  .days-streak {
+    font-size: 2rem;
+    font-weight: bold;
+  }
+
+  .streak-longest {
+    display: flex;
+    justify-content: space-between;
+    margin: 0 10px;
+  }
+
+  .title-progress {
+    font-size: 1.6em;
+    font-weight: 750;
+    margin: 20px 0 10px 15px;
+    color: #640295;
+    grid-column: 1 / -1;
+    grid-row: auto;
+  }
+
+  .course-progress {
+    grid-row: auto;
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+  }
+
+  .allCoursesBTN {
+    grid-column: 1 / -1;
+    position: relative;
+    width: 90%;
+    max-width: 500px;
+    --progress-container-width: 90%;
+    height: fit-content;
+    background: #f1edfa;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    transition: transform 0.2s;
+    box-shadow: 2px 4px 10px #d5c1fa;
+    border-radius: 20px;
+    overflow: hidden;
+    z-index: 2;
+    margin: 20px auto;
+
+    /* dejar espacio para el "borde" interno */
+    z-index: 0;
+    background-clip: padding-box; /* importante */
+  }
+
+  .allCoursesBTN::before {
+    content: "";
+    position: absolute;
+    inset: 0; /* ocupa todo el elemento */
+    padding: 2px; /* grosor del borde */
+    border-radius: inherit; /* respeta el mismo radius */
+    background: linear-gradient(
+      156.25deg,
+      #825d97 0%,
+      #ab4afd 50%,
+      #482d8a 100%
+    );
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  .allCoursesBTN p {
+    font-size: 1.25rem;
+    font-family: "Raleway";
+    font-weight: 700;
+
+    background: linear-gradient(90deg, #b969ff 0%, #ab4afd 50%, #b969ff 100%);
+    background-size: 200%;
+
+    animation: shimmer 5s linear infinite;
+    transition: transform 0.3s ease-in-out;
+
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .allCoursesBTN p:hover {
+    transform: scale(1.05);
+
+    animation: shimmer 1s linear infinite;
+  }
+
+  @keyframes shimmer {
+    0% {
+      background-position: 200% 0;
+    }
+    100% {
+      background-position: -200% 0;
+    }
+  }
+
+  /* Tablet: pantallas medianas (768px a 1024px) */
+  @media (min-width: 768px) and (max-width: 1024px) {
+    .profile {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      grid-template-rows: repeat(18, 4vh);
+      width: 100%;
+    }
+
+    /* fondo */
+    .profile-background {
+      grid-column: 1 / -1;
+      grid-row: 1 / 16;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 1;
+      border-radius: 0 0 40px 40px;
+    }
+
+    /* Foto de Perfil*/
+    .profile-container {
+      grid-column: 4 / 10;
+      grid-row: 3 / 14;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .profile-picture {
+      width: 200px; /* Tamaño controlado para tablet */
+      height: 200px;
+      border-radius: 50%;
+      border: 4px solid white;
+    }
+
+    .profile-upload {
+      display: none;
+    }
+
+    .profile-info {
+      text-align: center;
+      font-weight: 600;
+      color: white;
+      margin-top: 10px;
+    }
+
+    .profile-username {
+      font-size: 2rem;
+      margin: 10px;
+    }
+
+    .profile-picture-label img {
+      border: solid 2px rgb(0, 0, 0);
+    }
+
+    .followers {
+      display: flex;
+      justify-self: center;
+      gap: 150px;
+    }
+
+    .streak {
+      grid-row: 16 / 23;
+      grid-column: 2 / 12;
+      border: 2px solid rgb(55, 0, 76);
+      color: rgb(55, 0, 76);
+      border-radius: 20px;
+      z-index: 2;
+      padding: 20px;
+    }
+
+    .title-streak {
+      font-weight: 600;
+    }
+
+    .streak-current {
+      justify-self: center;
+      margin: 25px;
+    }
+
+    .days-streak {
+      font-size: 2rem;
+    }
+
+    .streak-longest {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .title-progress {
+      grid-column: 1 / -1;
+      grid-row: 23;
+      font-size: 1.6em;
+      font-weight: 800;
+      margin-left: 10px;
+      color: #640295;
+    }
+
+    .course-progress {
+      grid-column: 1 / -1;
+      grid-row: 24;
+      display: flex;
+      justify-content: center;
+    }
+
+    .allCoursesBTN {
+      grid-column: 1 / -1;
+      position: relative;
+      width: 90%;
+      max-width: 400px;
+      --progress-container-width: 90%;
+      height: fit-content;
+      background: #f1edfa;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-around;
+      padding: 1rem;
+      transition: transform 0.2s;
+      box-shadow: 2px 4px 10px #d5c1fa;
+      border-radius: 20px;
+      overflow: hidden;
+      z-index: 2;
+      margin: 0 auto;
+
+      /* dejar espacio para el "borde" interno */
+      z-index: 0;
+      background-clip: padding-box; /* importante */
+    }
+
+    .allCoursesBTN::before {
+      content: "";
+      position: absolute;
+      inset: 0; /* ocupa todo el elemento */
+      padding: 2px; /* grosor del borde */
+      border-radius: inherit; /* respeta el mismo radius */
+      background: linear-gradient(
+        156.25deg,
+        #825d97 0%,
+        #ab4afd 50%,
+        #482d8a 100%
+      );
+      -webkit-mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+      mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .allCoursesBTN p {
+      font-size: 1.25rem;
+      font-family: "Raleway";
+      font-weight: 700;
+
+      background: linear-gradient(90deg, #b969ff 0%, #ab4afd 50%, #b969ff 100%);
+      background-size: 200%;
+
+      animation: shimmer 5s linear infinite;
+      transition: transform 0.3s ease-in-out;
+
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .allCoursesBTN p:hover {
+      transform: scale(1.05);
+
+      animation: shimmer 1s linear infinite;
+    }
+
+    @keyframes shimmer {
+      0% {
+        background-position: 200% 0;
+      }
+      100% {
+        background-position: -200% 0;
+      }
+    }
+  }
+
+  /* --- DESKTOP (Pantallas mayores a 1024px) --- */
+  @media (min-width: 1025px) {
+    .profile {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      grid-template-rows: repeat(24, 4vh);
+      width: 100%;
+      overflow-x: hidden;
+    }
+
+    /* --- FONDO VIOLETA (Solo para la columna del perfil) --- */
+    .profile-background {
+      grid-column: 1 / -1;
+      grid-row: 1 / 14;
+      border-radius: 0 0 20px 20px;
+      object-fit: cover;
+      z-index: 1;
+    }
+
+    /* --- CONTENEDOR DE PERFIL (Izquierda) --- */
+    .profile-container {
+      grid-column: 5 / 9;
+      grid-row: 1;
+      z-index: 2; /* nivel superior al fondo que es z 1*/
+      padding: 30px 20px;
+    }
+
+    .profile-picture {
+      border: 3px solid rgb(0, 0, 0);
+    }
+
+    .streak {
+      grid-row: 14 / 20;
+      grid-column: 1 / -1;
+      border: 2px solid rgb(55, 0, 76);
+      color: rgb(55, 0, 76);
+      margin: 15px;
+      border-radius: 20px;
+      z-index: 2;
+      padding: 15px;
+    }
+
+    .title-progress {
+      font-size: 1.6em;
+      font-weight: 750;
+      margin: 20px 0 10px 15px;
+      color: #640295;
+      grid-column: 1 / -1;
+      grid-row: 20;
+    }
+
+    .course-progress {
+      grid-row: 24;
+      grid-column: 1 / -1;
+    }
+
+    .allCoursesBTN {
+      /* El botón de abajo */
+      grid-column: 1 / -1;
+      grid-row: 28;
+      width: 100%; /* Casi toda la pantalla */
+      max-width: 1100px; /* Límite para que no se vea exagerado en monitores 4K */
+    }
+  }
+
+  /* Contenedor de fondo oscuro */
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(5px);
+    /* Centrado absoluto */
+    display: none;
+    justify-content: center;
+    align-items: center;
+  }
+
+  /* El encabezado (Título y X) - Se mantiene FIJO */
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 25px; /* Añadimos espacio interno */
+    background-color: #f1edfa;
+    border-bottom: 1px solid rgba(171, 74, 253, 0.2);
+  }
+
+  .modal-content {
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    max-height: 80vh; /* O la altura que prefieras */
+    border-radius: 20px;
+  }
+
+  .modal-body {
+    display: block;
+    width: 100%;
+    overflow-y: auto;
+    box-sizing: border-box;
+    place-items: center;
+  }
+
+  .modal-body::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .modal-body::-webkit-scrollbar-thumb {
+    background: #ab4afd;
+    border-radius: 10px;
+  }
+</style>
