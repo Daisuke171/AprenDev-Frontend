@@ -6,5 +6,7 @@ export default defineConfig({
     integrations: [react()],
     vite: {
         plugins: [tailwindcss()],
-    }
+    },
+    site: 'https://Daisuke171.github.io',
+    base: '/AprenDev-Frontend',
 });
