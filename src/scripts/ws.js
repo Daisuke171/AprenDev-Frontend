@@ -1,28 +1,42 @@
-const WS_URL = "ws://localhost:8080";
+import { io } from "socket.io-client";
 
 export class WSClient {
   constructor({ onOpen, onMessage, onClose, onError }) {
-    this.ws = null;
-    this.handlers = { onOpen, onMessage, onClose, onError };
+    this.onOpen = onOpen;
+    this.onMessage = onMessage;
+    this.onClose = onClose;
+    this.onError = onError;
+    this.socket = null;
   }
 
   connect() {
-    this.ws = new WebSocket(WS_URL);
+    // cambia el WebSocket por socket.io
+    this.socket = io("http://localhost:3010", {
+      transports: ["websocket"],
+      reconnection: true,
+    });
 
-    this.ws.onopen = () => this.handlers.onOpen?.();
-    this.ws.onmessage = (evt) => {
-      let data;
-      try { data = JSON.parse(evt.data); } catch { data = evt.data; }
-      this.handlers.onMessage?.(data);
-    };
-    this.ws.onclose = () => this.handlers.onClose?.();
-    this.ws.onerror = (err) => this.handlers.onError?.(err);
+    this.socket.on("connect", () => {
+      console.log("Socket.ID:", this.socket.id);
+      this.onOpen?.();
+    });
+
+    this.socket.onAny((event, data) => {
+      // esto captura CUALQUIER evento que llegue
+      this.onMessage?.({ event, data });
+    });
+
+    this.socket.on("disconnect", (reason) => {
+      this.onClose?.({ reason });
+    });
+
+    this.socket.on("connect_error", (error) => {
+      this.onError?.(error);
+    });
   }
 
-  send(type, payload = {}) {
-    if (!this.ws || this.ws.readyState !== WebSocket.OPEN) {
-      throw new Error("WebSocket no conectado");
-    }
-    this.ws.send(JSON.stringify({ type, payload }));
+  send(event, payload) {
+    // ahora enviamos como evento socket.io
+    this.socket.emit(event, payload);
   }
 }

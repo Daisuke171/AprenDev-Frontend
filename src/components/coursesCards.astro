@@ -1,0 +1,64 @@
+---
+const { src="", width="50", subtitle="subtitle"} = Astro.props;
+---
+
+<div class="courseCard">
+  <img src={src} alt="Course Icon" width={width} />
+  <p class="courseSubtitle">{subtitle}</p>
+</div>
+
+<style>
+  .courseCard {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    background: #f1edfa;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    transition: transform 0.2s;
+    box-shadow: 2px 4px 10px #d5c1fa;
+    border-radius: 20px;
+
+    /* dejar espacio para el "borde" interno */
+    z-index: 0;
+    background-clip: padding-box; /* importante */
+  }
+
+  .courseCard::before {
+    content: "";
+    position: absolute;
+    inset: 0; /* ocupa todo el elemento */
+    padding: 2px; /* grosor del borde */
+    border-radius: inherit; /* respeta el mismo radius */
+    background: linear-gradient(
+      156.25deg,
+      #825d97 0%,
+      #ab4afd 50%,
+      #482d8a 100%
+    );
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  .courseCard:hover {
+    transform: translateY(-5px);
+  }
+
+  .courseSubtitle {
+    font-size: 0.75rem;
+    font-weight: 400;
+    text-align: center;
+    color: #24014a;
+  }
+</style>

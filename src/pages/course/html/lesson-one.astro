@@ -1,0 +1,158 @@
+---
+import BarMenu from "@components/barMenu.astro";
+import CodeEditor from "@components/codeEditor.astro";
+import Navbar from "@components/navbar.astro";
+import AuthLayout from "@layouts/AuthLayout.astro";
+import LessonLayout from "@layouts/LessonLayout.astro";
+---
+
+<AuthLayout title="HTML - Lesson 1">
+  <Navbar title="Cursos" />
+
+  <LessonLayout title="HTML - Lección 1" href="/course/course-html">
+    <section class="lesson">
+      <h1>¿Qué es HTML?</h1>
+      <p>
+        Imaginá que querés armar una casita con bloques LEGO. Necesitás poner:
+      </p>
+      <ul>
+        <li>una puerta</li>
+        <li>una ventana</li>
+        <li>un cartel</li>
+        <li>un piso</li>
+      </ul>
+
+      <p>
+        <strong>HTML es como esos bloques</strong>, pero para armar una página
+        web. Cada bloque se llama <strong>etiqueta</strong>.
+      </p>
+
+      <h2>🏷️ ¿Qué es una etiqueta?</h2>
+      <p>
+        Una <strong>etiqueta</strong> es como una cajita que le dice a la computadora
+        qué es algo.
+      </p>
+
+      <p>Por ejemplo:</p>
+      <ul>
+        <li>&lt;h1&gt -> dice que es un título grande.</li>
+        <li>&lt;p&gt -> le dice que es un párrafo.</li>
+        <li>&lt;img&gt -> le dice que es una imagen.</li>
+      </ul>
+
+      <h2>✨ Las etiquetas se ABREN y se CIERRAN</h2>
+
+      <p>Igual que una cajita 📦:</p>
+      <pre>
+<span style="color:#da9d4f;">&lt;etiqueta&gt;</span>   <span style="color:#6a9955;">← se abre la cajita</span>
+  <span style="color:#9cdcfe;">algo dentro</span>
+<span style="color:#da9d4f;">&lt;/etiqueta&gt;</span>  <span style="color:#6a9955;">← se cierra la cajita</span>
+</pre>
+
+      <p>Ejemplo real:</p>
+
+      <pre>
+<span style="color:#da9d4f;">&lt;h1&gt;</span>  <span style="color:#6a9955;">← se abre la cajita</span>
+  <span style="color:#9cdcfe;">¡Hola, mundo!</span>
+<span style="color:#da9d4f;">&lt;/h1&gt;</span> <span style="color:#6a9955;">← se cierra la cajita</span>
+</pre>
+
+
+
+      <a type="button" class="button-style" href="lesson-two">SIGUIENTE</a>
+    </section>
+  </LessonLayout>
+
+  <BarMenu />
+</AuthLayout>
+
+<style>
+  .lesson {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 0 25px;
+    margin-top: 10px;
+    margin-bottom: 50px;
+    overflow-y: scroll;
+  }
+
+  .lesson h1 {
+    font-family: "Raleway";
+    font-style: normal;
+    font-weight: 700;
+    font-size: 3ch;
+    line-height: 30px;
+    color: #171155;
+    margin-top: 15px;
+    margin-bottom: 10px;
+  }
+
+  .lesson p {
+    font-family: "Raleway";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 1.7ch;
+    line-height: 16px;
+
+    color: #171155;
+  }
+
+  .lesson ul {
+    font-family: "Raleway";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 1.7ch;
+    line-height: 16px;
+
+    color: #171155;
+    margin-left: 20px;
+    margin-bottom: 15px;
+    list-style: disc;
+    padding-left: 20px;
+  }
+
+  .lesson pre {
+    background: #0f1220;
+    color: #e6e6eb;
+    font-family: "Fira Code", "JetBrains Mono", monospace;
+    font-size: 1.6ch;
+    line-height: 1.6;
+    padding: 16px 18px;
+    border-radius: 12px;
+    width: 100%;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+    overflow-x: auto;
+  }
+
+  /* optional: subtle left accent */
+  .lesson pre {
+    border-left: 4px solid #da9d4f;
+  }
+
+  /* optional: code text a bit brighter */
+  .lesson pre code {
+    color: #ffffff;
+  }
+
+  .button-style {
+    background: #da9d4f;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 2.7ch;
+    color: #f1edfa;
+    width: fit-content;
+    height: 60px;
+    padding: 0 100px;
+    box-shadow: inset 0px -4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+    margin: 0 auto;
+    margin-top: 20px;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    cursor: pointer;
+  }
+</style>

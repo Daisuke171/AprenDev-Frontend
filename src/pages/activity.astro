@@ -1,0 +1,127 @@
+---
+import BarMenu from "@components/barMenu.astro";
+import Navbar from "@components/navbar.astro";
+import AuthLayout from "@layouts/AuthLayout.astro";
+import Challenge from "@components/challenge.astro";
+import Post from "@components/post.astro";
+import ModalPostLarge from "@components/modalPostLarge.astro";
+---
+
+<AuthLayout>
+  <Navbar title="Comunidad" />
+
+  <div class="content">
+    <section id="community-tab">
+      <div class="tabs">
+        <a href="/community">
+          <p>PRÁCTICA</p>
+        </a>
+      </div>
+      <div class="tabs">
+        <a href="/activity">
+          <p>ACTIVIDAD</p>
+        </a>
+      </div>
+    </section>
+
+    <div class="post">
+      <Post user="Billy Mitchell" />
+      <ModalPostLarge />
+    </div>
+  </div>
+
+  <BarMenu />
+</AuthLayout>
+
+<style>
+  body {
+    background: #f1edfa;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  .content {
+    flex: 1;
+    padding-top: 80px;
+    padding-bottom: 110px;
+  }
+
+  #community-tab {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    background-color: #c9c0de;
+    height: 70px;
+    margin-bottom: 1rem;
+  }
+  .tabs {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50%;
+    height: 100%;
+    border-bottom: 4px solid #240e59;
+    cursor: pointer;
+  }
+  .tabs:first-child {
+    border-bottom: none;
+  }
+  .tabs:nth-child(2) {
+    background-color: #f1edfa;
+  }
+
+  .tabs a p {
+    font-weight: 600;
+    font-size: 1.4rem;
+    color: #240e59;
+  }
+
+  .post {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+</style>
+
+<script>
+  const modal = document.getElementById("modal");
+  const modalBox = modal.querySelector(".modal");
+  const closeBtn = modal.querySelector(".close-btn");
+
+  // Close when clicking outside
+  modal.addEventListener("click", () => {
+    window.dispatchEvent(new Event("close-post-modal"));
+  });
+
+  // Prevent closing when clicking inside
+  modalBox.addEventListener("click", (e) => {
+    e.stopPropagation();
+  });
+
+  // Close button
+  closeBtn.addEventListener("click", () => {
+    window.dispatchEvent(new Event("close-post-modal"));
+  });
+
+  window.addEventListener("close-post-modal", () => {
+    const modal = document.getElementById("modal");
+    if (!modal) return;
+
+    // Add a closing class to trigger an exit transition
+    modal.classList.add("closing");
+
+    // Wait for the animation to finish (200ms) before hiding
+    setTimeout(() => {
+      modal.style.display = "none";
+      modal.classList.remove("closing");
+    }, 200);
+  });
+
+  window.addEventListener("open-post-modal", () => {
+    const modal = document.getElementById("modal");
+    if (!modal) return;
+
+    modal.style.display = "flex";
+    // The CSS @keyframes will handle the "pop" automatically now
+  });
+</script>

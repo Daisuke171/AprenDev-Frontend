@@ -1,11 +1,15 @@
 import { WSClient } from "./ws.js";
 
 export const client = new WSClient({
-  onOpen: () => console.log("WS conectado"),
-  onMessage: (data) => console.log("Mensaje recibido:", data),
-  onClose: () => console.log("WS desconectado"),
-  onError: (err) => console.error("WS error:", err),
+  onOpen: () => {
+    console.log("✅ Socket.IO conectado");
+    client.send("register", { username: "stefano" });
+  },
+  onMessage: ({ event, data }) => {
+    console.log(`📩 Evento recibido (${event}):`, data);
+  },
+  onClose: (info) => console.log("❌ Desconectado:", info),
+  onError: (err) => console.error("⚠️ Error Socket:", err),
 });
 
-// Conectamos apenas se importe
 client.connect();

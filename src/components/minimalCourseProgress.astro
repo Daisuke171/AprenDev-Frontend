@@ -1,0 +1,129 @@
+---
+const { name, done, maxLessons } = Astro.props;
+
+// Calculate percentage for display
+const percentage = maxLessons > 0 ? Math.round((done / maxLessons) * 100) : 0;
+// Calculate ratio for CSS scale
+const progressRatio = maxLessons > 0 ? (done / maxLessons) : 0;
+---
+
+<section class="courseCard">
+  <div class="cardHeader">
+    <h3 class="moduleName">{name}</h3>
+    <span class="percentageText">{percentage}%</span>
+  </div>
+
+  <div class="progressBarContainer">
+    <div class="progressBarFill" style={`--p:${progressRatio};`}></div>
+  </div>
+
+  <div class="cardFooter">
+    <span class="lessonCount">{done} / {maxLessons} Lessons</span>
+  </div>
+</section>
+
+<style>
+  /* --- Main Container --- */
+  .courseCard {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+    background: #fbf9ff; /* Slightly lighter for better contrast */
+    padding: 1.5rem;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px -10px rgba(72, 45, 138, 0.15);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    
+    /* Logic for the gradient border */
+    background-clip: padding-box;
+    border: 2px solid transparent; /* Placeholder for the mask */
+  }
+
+  /* Hover Interaction */
+  .courseCard:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px -10px rgba(72, 45, 138, 0.25);
+  }
+
+  /* --- Gradient Border Trick --- */
+  .courseCard::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 20px; 
+    padding: 2px; /* Border width */
+    
+    /* The Gradient Colors */
+    background: linear-gradient(135deg, #825d97 0%, #ab4afd 50%, #482d8a 100%);
+    
+    /* Mask logic to show only the border */
+    -webkit-mask: 
+      linear-gradient(#fff 0 0) content-box, 
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    
+    pointer-events: none;
+    z-index: 1; 
+  }
+
+  /* --- Header Layout --- */
+  .cardHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+  }
+
+  .moduleName {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #2d2a3d;
+    font-family: system-ui, -apple-system, sans-serif;
+  }
+
+  .percentageText {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #825d97;
+  }
+
+  /* --- Progress Bar --- */
+  .progressBarContainer {
+    width: 100%;
+    height: 10px;
+    background: #e8e1f5;
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .progressBarFill {
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(90deg, #da9d4f 0%, #ffbb6b 100%);
+    
+    /* Animation logic */
+    transform-origin: left;
+    transform: scaleX(var(--p, 0));
+    transition: transform 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
+    
+    /* Glow effect */
+    box-shadow: 0 0 10px rgba(218, 157, 79, 0.4);
+    border-radius: 10px;
+  }
+
+  /* --- Footer --- */
+  .cardFooter {
+    margin-top: 0.75rem;
+    display: flex;
+    justify-content: flex-end; /* Aligns text to the right */
+  }
+
+  .lessonCount {
+    font-size: 0.85rem;
+    color: #7a7585;
+    font-weight: 500;
+  }
+</style>

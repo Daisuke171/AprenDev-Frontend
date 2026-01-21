@@ -1,0 +1,225 @@
+---
+export const prerender = false;
+import BarMenu from "@components/barMenu.astro";
+import CourseProgress from "@components/courseProgress.astro";
+import CoursesCards from "@components/coursesCards.astro";
+import Navbar from "@components/navbar.astro";
+import AuthLayout from "@layouts/AuthLayout.astro";
+import CircleLinks from "src/assets/circleLinks.astro";
+import ModalCourse from "@components/modalCourse.astro";
+---
+
+<AuthLayout title="Home">
+  <!--se encarga de mostrar el username y el nav -->
+  <Navbar />
+
+  <div class="content">
+    <div class="refContainer">
+      <CircleLinks
+        gradient=`156.25deg, rgba(171, 74, 253, 0.5) -5.64%, rgba(36, 14, 89, 0.85) 97.97%`
+        subtitle="Cursos"
+        image="/bookStar.png"
+        width="60"
+        id="circleCourses"
+      />
+   
+      <CircleLinks
+        gradient=`156.25deg, rgba(254, 84, 112, 0.5) -5.64%, rgba(36, 14, 89, 0.85) 97.97%`
+        subtitle="Games"
+        image="/playIcon.png"
+        width="45"
+      />
+    </div>
+
+    <div class="coursesContainer">
+      <h2>Mis cursos</h2>
+      <div class="courses">
+        <a href="/course/course-html">
+          <CoursesCards
+            src=`/abecedario.png`
+            subtitle=`abecedario`
+            width="40"
+          />
+        </a>
+
+        <CoursesCards
+          src=`/silaba.png`
+          subtitle=`Silabas`
+          width="40"
+        />
+
+       
+
+        <CoursesCards src=`/moreIcon.png` subtitle=`Descubrir más` width="40" />
+      </div>
+    </div>
+
+    <div class="progressContainer">
+      <CourseProgress />
+    </div>
+
+    <button type="button" class="allCoursesBTN">
+      <p>Ver todos los cursos</p>
+    </button>
+  </div>
+
+  <ModalCourse id="modalCursos" title="Cursos disponibles">
+    <ul>
+      <li><a href="index.html">Programación 👨‍💻</a></li>
+      <li><a href="index-matematicas">Matemáticas ➖➕</a></li>
+      <li><a href="">Prácticas del Lenguaje 📚</a></li>
+    </ul>
+  </ModalCourse>
+
+  <BarMenu />
+</AuthLayout>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const circleCursos = document.getElementById("circleCourses");
+    const modalCursos = document.getElementById("modalCursos");
+    const closeBtn = document.getElementById("modalCursos-close");
+
+    // Abrir modal
+    circleCursos.addEventListener("click", () => {
+      modalCursos.classList.remove("hidden");
+    });
+
+    // Cerrar modal con la X
+    closeBtn.addEventListener("click", () => {
+      modalCursos.classList.add("hidden");
+    });
+
+    // Cerrar modal al hacer clic fuera del contenido
+    modalCursos.addEventListener("click", (e) => {
+      if (e.target === modalCursos) {
+        modalCursos.classList.add("hidden");
+      }
+    });
+  });
+</script>
+
+<style>
+  body {
+    background-color: #f1edfa;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  .content {
+    flex: 1;
+    padding-top: 80px;
+    padding-bottom: 110px;
+  }
+
+  .refContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .coursesContainer {
+    display: flex;
+    width: fit-content;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 1rem;
+    margin: 0 auto;
+  }
+  .coursesContainer h2 {
+    align-self: flex-start;
+    margin-left: 1.25rem;
+    color: #24014a;
+    margin-top: 30px;
+    margin-bottom: 5px;
+  }
+  .courses {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+  }
+
+  .progressContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .allCoursesBTN {
+    position: relative;
+    width: 90%;
+    max-width: 400px;
+    --progress-container-width: 90%;
+    height: fit-content;
+    background: #f1edfa;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    padding: 1rem;
+    transition: transform 0.2s;
+    box-shadow: 2px 4px 10px #d5c1fa;
+    border-radius: 20px;
+    overflow: hidden;
+    z-index: 2;
+    margin: 0 auto;
+
+    /* dejar espacio para el "borde" interno */
+    z-index: 0;
+    background-clip: padding-box; /* importante */
+  }
+
+  .allCoursesBTN::before {
+    content: "";
+    position: absolute;
+    inset: 0; /* ocupa todo el elemento */
+    padding: 2px; /* grosor del borde */
+    border-radius: inherit; /* respeta el mismo radius */
+    background: linear-gradient(
+      156.25deg,
+      #825d97 0%,
+      #ab4afd 50%,
+      #482d8a 100%
+    );
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  .allCoursesBTN p {
+    font-size: 1.25rem;
+    font-family: "Raleway";
+    font-weight: 700;
+
+    background: linear-gradient(90deg, #b969ff 0%, #ab4afd 50%, #b969ff 100%);
+    background-size: 200%;
+
+    animation: shimmer 5s linear infinite;
+    transition: transform 0.3s ease-in-out;
+
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .allCoursesBTN p:hover {
+    transform: scale(1.05);
+
+    animation: shimmer 1s linear infinite;
+  }
+
+  @keyframes shimmer {
+    0% {
+      background-position: 200% 0;
+    }
+    100% {
+      background-position: -200% 0;
+    }
+  }
+</style>

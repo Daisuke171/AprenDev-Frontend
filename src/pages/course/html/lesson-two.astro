@@ -1,0 +1,194 @@
+---
+import BarMenu from "@components/barMenu.astro";
+import CodeEditor from "@components/codeEditor.astro";
+import Navbar from "@components/navbar.astro";
+import AuthLayout from "@layouts/AuthLayout.astro";
+import LessonLayout from "@layouts/LessonLayout.astro";
+---
+
+<AuthLayout title="HTML - Lesson 1">
+  <Navbar title="Cursos" />
+
+  <LessonLayout title="HTML - Lección 2" href="lesson-one">
+    <section class="lesson">
+      <h1>🛠️ PRACTICA (juguemos)</h1>
+      <p>
+        Completa la línea de código a continuación para crear un título y un
+        párrafo
+      </p>
+
+      <pre>
+<span style="color:#da9d4f;">&lt;etiqueta&gt;</span>   <span style="color:#6a9955;">← se abre la cajita</span>
+  <span style="color:#9cdcfe;">algo dentro</span>
+<span style="color:#da9d4f;">&lt;/etiqueta&gt;</span>  <span style="color:#6a9955;">← se cierra la cajita</span>
+</pre>
+
+      <div class="choiceContainer">
+        <button>h1</button>
+        <button>p</button>
+        <button>img</button>
+      </div>
+
+      <div class="btnContainer">
+        <!-- RESTART -->
+        <button>
+          <svg
+          width="20"
+          height="20"
+          viewBox="0 0 20 20"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <g clip-path="url(#clip0_93_441)">
+            <path
+              d="M18.7539 7.49981H19.0625C19.582 7.49981 20 7.08184 20 6.56231V0.937312C20 0.558406 19.7734 0.214655 19.4219 0.0701242C19.0703 -0.074407 18.668 0.00762421 18.3984 0.273249L16.3789 2.29669C14.6484 0.863093 12.4219 -0.000188278 10 -0.000188278C4.96094 -0.000188278 0.792969 3.72637 0.101562 8.57403C0.00390625 9.25762 0.476563 9.89044 1.16016 9.98809C1.84375 10.0857 2.47656 9.60919 2.57422 8.9295C3.09375 5.29278 6.22266 2.49981 10 2.49981C11.7344 2.49981 13.3281 3.08575 14.5977 4.07403L12.7734 5.89825C12.5039 6.16778 12.4258 6.57012 12.5703 6.92169C12.7148 7.27325 13.0586 7.49981 13.4375 7.49981H18.7539ZM19.9023 11.4256C20 10.742 19.5234 10.1092 18.8438 10.0115C18.1641 9.91387 17.5273 10.3904 17.4297 11.0701C16.9102 14.7029 13.7812 17.4959 10.0039 17.4959C8.26953 17.4959 6.67578 16.91 5.40625 15.9217L7.22656 14.1014C7.49609 13.8318 7.57422 13.4295 7.42969 13.0779C7.28516 12.7264 6.94141 12.4998 6.5625 12.4998H0.9375C0.417969 12.4998 0 12.9178 0 13.4373V19.0623C0 19.4412 0.226562 19.785 0.578125 19.9295C0.929688 20.074 1.33203 19.992 1.60156 19.7264L3.625 17.7029C5.35156 19.1365 7.57812 19.9998 10 19.9998C15.0391 19.9998 19.207 16.2732 19.8984 11.4256H19.9023Z"
+              fill="#F1EDFA"></path>
+          </g>
+          <defs>
+            <clipPath id="clip0_93_441">
+              <rect width="20" height="20" fill="white"></rect>
+            </clipPath>
+          </defs>
+        </svg>
+        </button>
+
+        <!-- BACKSPACE -->
+        <button><svg
+          width="25"
+          height="25"
+          viewBox="0 0 25 25"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            fill-rule="evenodd"
+            clip-rule="evenodd"
+            d="M8.50316 5.46875H19.5313C20.1529 5.46875 20.749 5.71568 21.1886 6.15522C21.6281 6.59476 21.875 7.1909 21.875 7.8125V17.1875C21.875 17.8091 21.6281 18.4052 21.1886 18.8448C20.749 19.2843 20.1529 19.5313 19.5313 19.5313H8.50316C8.15174 19.5312 7.80483 19.4521 7.48812 19.2998C7.17141 19.1475 6.89299 18.926 6.67347 18.6516L2.80628 13.8188C2.50655 13.4446 2.34322 12.9794 2.34322 12.5C2.34322 12.0206 2.50655 11.5554 2.80628 11.1813L6.67347 6.34844C6.89266 6.07443 7.17057 5.85314 7.48671 5.70088C7.80285 5.54863 8.14914 5.4693 8.50003 5.46875M4.83909 4.88438C5.27863 4.33492 5.83622 3.89146 6.47051 3.58689C7.1048 3.28232 7.79953 3.12446 8.50316 3.125H19.5313C20.7745 3.125 21.9668 3.61886 22.8458 4.49794C23.7249 5.37702 24.2188 6.5693 24.2188 7.8125V17.1875C24.2188 18.4307 23.7249 19.623 22.8458 20.5021C21.9668 21.3811 20.7745 21.875 19.5313 21.875H8.50316C7.80006 21.8751 7.10594 21.717 6.47223 21.4124C5.83851 21.1079 5.28142 20.6647 4.84222 20.1156L0.976593 15.2828C0.34443 14.4931 0 13.5116 0 12.5C0 11.4884 0.34443 10.5069 0.976593 9.71719L4.83909 4.88438ZM11.375 8.54688C11.1529 8.33988 10.8591 8.22718 10.5555 8.23254C10.2519 8.2379 9.9622 8.36088 9.7475 8.57559C9.53279 8.7903 9.4098 9.07996 9.40444 9.38356C9.39909 9.68716 9.51178 9.98098 9.71878 10.2031L12.0157 12.5L9.71878 14.7969C9.60364 14.9042 9.5113 15.0335 9.44725 15.1773C9.3832 15.321 9.34876 15.4762 9.34598 15.6336C9.34321 15.7909 9.37215 15.9472 9.43109 16.0931C9.49003 16.239 9.57775 16.3716 9.68903 16.4829C9.80031 16.5942 9.93287 16.6819 10.0788 16.7408C10.2247 16.7998 10.381 16.8287 10.5383 16.8259C10.6957 16.8231 10.8509 16.7887 10.9946 16.7247C11.1384 16.6606 11.2677 16.5683 11.375 16.4531L13.6719 14.1563L15.9688 16.4531C16.0761 16.5683 16.2054 16.6606 16.3492 16.7247C16.4929 16.7887 16.6481 16.8231 16.8055 16.8259C16.9628 16.8287 17.1191 16.7998 17.265 16.7408C17.4109 16.6819 17.5435 16.5942 17.6548 16.4829C17.7661 16.3716 17.8538 16.239 17.9127 16.0931C17.9717 15.9472 18.0006 15.7909 17.9978 15.6336C17.9951 15.4762 17.9606 15.321 17.8966 15.1773C17.8325 15.0335 17.7402 14.9042 17.625 14.7969L15.3282 12.5L17.625 10.2031C17.832 9.98098 17.9447 9.68716 17.9394 9.38356C17.934 9.07996 17.811 8.7903 17.5963 8.57559C17.3816 8.36088 17.0919 8.2379 16.7883 8.23254C16.4848 8.22718 16.1909 8.33988 15.9688 8.54688L13.6719 10.8438L11.375 8.54688Z"
+            fill="#F1EDFA"></path>
+        </svg></button>
+
+        <!-- CHECK -->
+        <button>COMPROBAR</button>
+      </div>
+
+      <a type="button" class="button-style" href="lesson-three">SIGUIENTE</a>
+    </section>
+  </LessonLayout>
+
+  <BarMenu />
+</AuthLayout>
+
+<style>
+  .lesson {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 0 25px;
+    margin-top: 10px;
+    margin-bottom: 50px;
+    overflow-y: scroll;
+  }
+
+  .lesson h1 {
+    font-family: "Raleway";
+    font-style: normal;
+    font-weight: 700;
+    font-size: 3ch;
+    line-height: 30px;
+    color: #171155;
+    margin-top: 15px;
+    margin-bottom: 10px;
+  }
+
+  .lesson p {
+    font-family: "Raleway";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 1.7ch;
+    line-height: 16px;
+
+    color: #171155;
+  }
+
+  .lesson ul {
+    font-family: "Raleway";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 1.7ch;
+    line-height: 16px;
+
+    color: #171155;
+    margin-left: 20px;
+    margin-bottom: 15px;
+    list-style: disc;
+    padding-left: 20px;
+  }
+
+  .lesson pre {
+    background: #0f1220;
+    color: #e6e6eb;
+    font-family: "Fira Code", "JetBrains Mono", monospace;
+    font-size: 1.6ch;
+    line-height: 1.6;
+    padding: 16px 18px;
+    border-radius: 12px;
+    width: 100%;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+    overflow-x: auto;
+  }
+
+  /* optional: subtle left accent */
+  .lesson pre {
+    border-left: 4px solid #da9d4f;
+  }
+
+  /* optional: code text a bit brighter */
+  .lesson pre code {
+    color: #ffffff;
+  }
+
+  .button-style, .choiceContainer button, .btnContainer button {
+    background: #da9d4f;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 2.7ch;
+    color: #f1edfa;
+    width: fit-content;
+    height: 60px;
+    padding: 0 100px;
+    box-shadow: inset 0px -4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+    margin: 0 auto;
+    margin-top: 20px;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    cursor: pointer;
+  }
+
+  .choiceContainer {
+    display: flex;
+    gap: 20px;
+    margin-top: 20px;
+    width: 100%;
+  }
+  .choiceContainer button{
+    padding: 0 10px;
+    min-width: 60px;
+    font-size: 1.8ch;
+  }
+  .btnContainer {
+    display: flex;
+    gap: 20px;
+    margin-top: 20px;
+    width: 100%;
+  }
+  .btnContainer button {
+    padding: 0 10px;
+    min-width: 60px;
+    font-size: 1.8ch;
+  }
+  
+</style>

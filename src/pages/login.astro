@@ -1,19 +1,22 @@
 ---
-import LoginForm from '@components/Login.astro';
+import LoginForm from "@components/Login.astro";
+import BackBtn from "@components/register-login/backBtn.astro";
+import AuthLayout from "@layouts/AuthLayout.astro";
+import Bubble from "@components/register-login/bubble.astro";
 ---
 
-<html lang="es">
-  <head>
-    <title>Login | AprenDev</title>
-    <script type="module" src="../scripts/app.js"></script>
-  </head>
-  <body>
-    <main>
-      <h1>Iniciar sesión</h1>
-      <LoginForm />
-      <canvas id="statusCanvas" width="120" height="120"></canvas>
-      <p id="wsStatus">WS: desconectado</p>
-      <pre id="log"></pre>
-    </main>
-  </body>
-</html>
+<AuthLayout>
+  <BackBtn />
+  
+  <Bubble />
+  <LoginForm client:load />
+</AuthLayout>
+
+<style>
+  body {
+    padding: 2rem;
+    background: linear-gradient(150.69deg, #7D63A0 -3.28%, #5A3C92 55.4%, #482D8A 114.09%);
+    height: 100svh;
+    overflow-x: hidden;
+  }
+</style>

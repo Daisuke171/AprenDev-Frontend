@@ -1,0 +1,150 @@
+---
+const {
+  initialCode = "<h1>Mi primer título</h1>\n<p>¡Estoy aprendiendo HTML!</p>",
+} = Astro.props;
+---
+
+<style>
+  .playground {
+    width: 100%;
+    max-width: 400px;
+    background: #1a1b2e; 
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    font-family: 'Segoe UI', sans-serif;
+  }
+
+  .tabs { display: flex; height: 45px; }
+
+  .tab {
+    flex: 1; display: flex; align-items: center; justify-content: center;
+    cursor: pointer; font-weight: bold; font-size: 14px; text-transform: uppercase;
+  }
+
+  .tab.active { background: #242743 !important; color: white !important; }
+  .tab:not(.active) { background: #c5bcdb !important; color: #6a648a !important; }
+
+  .panel { display: none; position: relative; height: 400px; }
+  .panel.active { display: block; }
+
+  /* Editor Container */
+  .editor-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: #1a1b2e;
+    overflow: auto;
+  }
+
+  /* Both the textarea and the highlighter must have identical styling */
+  textarea, .highlighter {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    padding: 25px;
+    font-family: 'Fira Code', monospace;
+    font-size: 15px;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    margin: 0;
+    border: none;
+    outline: none;
+  }
+
+  textarea {
+    background: transparent;
+    color: transparent; /* Hide real text */
+    caret-color: white; /* Show cursor */
+    z-index: 2;
+    resize: none;
+  }
+
+  .highlighter {
+    color: #ffffff; /* Default text color */
+    z-index: 1;
+    pointer-events: none; /* Let clicks pass through to textarea */
+  }
+
+  /* SYNTAX COLORS */
+  :global(.hl-tag) { color: #f7768e; } /* Pink/Red for < > and tag names */
+  :global(.hl-bracket) { color: #f7768e; opacity: 0.8; }
+
+  .copy-btn {
+    position: absolute; top: 15px; right: 15px;
+    background: rgba(255, 255, 255, 0.24); border-radius: 6px;
+    padding: 5px; cursor: pointer; z-index: 10;
+  }
+
+  iframe { width: 100%; height: 100%; border: none; background: white; }
+</style>
+
+<div class="playground" data-editor>
+  <div class="tabs">
+    <div class="tab active" data-tab="html">HTML</div>
+    <div class="tab" data-tab="output">SALIDA</div>
+  </div>
+
+  <div class="panel active" id="html">
+    <div class="copy-btn">
+       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" opacity="0.5"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
+    </div>
+    <div class="editor-container">
+      <div class="highlighter" aria-hidden="true"></div>
+      <textarea spellcheck="false" autocomplete="off">{initialCode}</textarea>
+    </div>
+  </div>
+
+  <div class="panel" id="output">
+    <iframe title="preview"></iframe>
+  </div>
+</div>
+
+<script>
+  const editors = document.querySelectorAll("[data-editor]");
+
+  editors.forEach((root) => {
+    const tabs = root.querySelectorAll(".tab");
+    const panels = root.querySelectorAll(".panel");
+    const textarea = root.querySelector("textarea") as HTMLTextAreaElement;
+    const highlighter = root.querySelector(".highlighter") as HTMLElement;
+    const iframe = root.querySelector("iframe") as HTMLIFrameElement;
+
+    function highlight(text: string) {
+      // Regex to find <tags> and highlight them
+      return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        // This looks for anything between &lt; and &gt; and wraps it in a span
+        .replace(/(&lt;\/?[a-z1-6]+)(&gt;)/gi, '<span class="hl-tag">$1</span><span class="hl-tag">$2</span>')
+        .replace(/(&lt;[a-z1-6]+)/gi, '<span class="hl-tag">$1</span>');
+    }
+
+    function sync() {
+      if (!textarea || !highlighter || !iframe) return;
+      
+      // Update the colored text
+      highlighter.innerHTML = highlight(textarea.value);
+      
+      // Update the preview
+      iframe.srcdoc = `<html><body style="font-family:sans-serif;padding:20px;">${textarea.value}</body></html>`;
+    }
+
+    // Handle Tab Switching
+    tabs.forEach((tab) => {
+      tab.addEventListener("click", () => {
+        const target = (tab as HTMLElement).dataset.tab;
+        tabs.forEach(t => t.classList.remove("active"));
+        panels.forEach(p => p.classList.remove("active"));
+        tab.classList.add("active");
+        root.querySelector(`#${target}`)?.classList.add("active");
+      });
+    });
+
+    textarea.addEventListener("input", sync);
+    // Initial sync
+    sync();
+  });
+</script>

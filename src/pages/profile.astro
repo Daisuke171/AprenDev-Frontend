@@ -1,0 +1,724 @@
+---
+import Navbar from "@components/navbar.astro";
+import AuthLayout from "@layouts/AuthLayout.astro";
+import CourseProgress from "@components/courseProgress.astro";
+import MinimalCourseProgress from "@components/minimalCourseProgress.astro";
+import Streak from "@components/streak.astro";
+
+const token = Astro.cookies.get("session_id")?.value;
+console.log("Token en perfil:", token);
+
+let username = "";
+
+if (token) {
+  const res = await fetch("http://localhost:3010/auth/session", {
+    headers: { cookie: `session_id=${token}` },
+  });
+  if (res.ok) {
+    const data = await res.json();
+    console.log("Respuesta del backend:", data);
+    username = data.username;
+  }
+}
+
+const courseData = [
+  {
+    name: "JavaScript",
+    done: 8,
+    maxLessons: 10,
+  },
+  {
+    name: "HTML",
+    done: 3,
+    maxLessons: 12,
+  },
+  {
+    name: "CSS",
+    done: 20,
+    maxLessons: 20,
+  },
+];
+---
+
+<AuthLayout title="Perfil">
+  <Navbar transparent={true} title="" />
+
+  <div class="profile">
+    <div class="profile-container">
+      <svg
+        width="193"
+        height="269"
+        viewBox="0 0 193 269"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        class="profile-bg-bubble"
+      >
+        <path
+          opacity="0.5"
+          d="M17.0813 2.81599C26.4467 -1.58088 37.4252 -0.787929 46.0616 4.90916L133.532 62.6098C143.719 69.3298 152.783 77.6131 160.392 87.1549L171.402 100.962C201.54 138.759 198.909 193.061 165.257 227.768L149.934 243.57C109.287 285.491 39.0387 272.336 16.3137 218.548C12.7356 210.079 10.6159 201.065 10.0444 191.889L0.0577668 31.5513C-0.699848 19.3876 6.04925 7.99527 17.0813 2.81599Z"
+          fill="url(#paint0_linear_217_555)"></path>
+        <defs>
+          <linearGradient
+            id="paint0_linear_217_555"
+            x1="59.7522"
+            y1="298.996"
+            x2="197.154"
+            y2="96.7543"
+            gradientUnits="userSpaceOnUse"
+          >
+            <stop stop-color="#825F99"></stop>
+            <stop offset="0.464351" stop-color="#8B6591"></stop>
+            <stop offset="1" stop-color="#DA9D4F"></stop>
+          </linearGradient>
+        </defs>
+      </svg>
+
+      <div class="profile-picture-container">
+        <label for="profile-upload" class="profile-picture-label">
+          <img
+            src="/image-perfil.png"
+            alt="Foto de perfil"
+            class="profile-picture"
+          />
+        </label>
+        <div class="profile-info">
+          <!--    aqui se carga el username y el saludo -->
+          <p id="profile-username" class="profile-username"></p>
+          <p class="profile-level">Nivel 1</p>
+          <div class="followers">
+            <p class="profile-follower">1 seguidor</p>
+            <p class="profile-follow">1 seguidos</p>
+          </div>
+        </div>
+        <input
+          type="file"
+          id="profile-upload"
+          class="profile-upload"
+          accept="image/*"
+        />
+      </div>
+    </div>
+
+    <div class="streak-container">
+      <Streak currentStreak={5} longestStreak={12} />
+    </div>
+
+    <p class="title-progress">Progresos De Cursos</p>
+    <div class="course-progress">
+      <CourseProgress />
+    </div>
+    <button type="button" class="allCoursesBTN">
+      <p>Ver todos los cursos</p>
+    </button>
+  </div>
+
+  <div id="coursesModal" class="modal">
+    <div class="modal-content">
+      
+      <div class="modal-header">
+        <h2>Progreso de todos los cursos</h2>
+        <span class="close-modal">&times;</span>
+      </div>
+
+      <div class="modal-body">
+        {
+          courseData.map((course) => (
+            <MinimalCourseProgress
+              name={course.name}
+              done={course.done}
+              maxLessons={course.maxLessons}
+            />
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</AuthLayout>
+
+<script>
+  // Obtener el nombre del usuario
+  fetch("http://localhost:3010/auth/session", {
+    credentials: "include",
+  })
+    .then((res) => {
+      if (!res.ok) throw new Error("No autorizado");
+      return res.json();
+    })
+    .then((data) => {
+      const name = data.username || "invitado";
+      document.getElementById("profile-username").textContent = `Hola ${name}`;
+    })
+    .catch((err) => {
+      console.error("Error al obtener el nombre:", err);
+      document.getElementById("profile-username").textContent = "Hola invitado";
+    });
+
+  // Cargar la imagen del perfil
+  const uploadInput = document.getElementById(
+    "profile-upload",
+  ) as HTMLInputElement;
+  const profileImg = document.querySelector(
+    ".profile-picture",
+  ) as HTMLImageElement;
+
+  uploadInput.addEventListener("change", (event) => {
+    const target = event.target as HTMLInputElement; // 👈 aquí el cast
+    const file = target.files?.[0];
+    if (file) {
+      const imageUrl = URL.createObjectURL(file);
+      profileImg.src = imageUrl;
+    }
+  });
+
+  const modal = document.getElementById("coursesModal");
+  const btn = document.querySelector(".allCoursesBTN");
+  const span = document.querySelector(".close-modal");
+
+  if (btn && modal) {
+    btn.addEventListener("click", () => {
+      modal.style.display = "flex"; // Usar flex para centrar el modal-content
+      document.body.style.overflow = "hidden"; // Bloquea el scroll del fondo
+    });
+
+    const closeModal = () => {
+      modal.style.display = "none";
+      document.body.style.overflow = "auto";
+    };
+
+    span?.addEventListener("click", closeModal);
+    window.addEventListener("click", (e) => {
+      if (e.target === modal) closeModal();
+    });
+  }
+</script>
+
+<style>
+  .profile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    z-index: 0;
+  }
+
+  .profile-bg-bubble {
+    position: absolute;
+    top: -50px;
+    left: -50px;
+    width: 200px;
+    height: auto;
+    z-index: -1;
+  }
+
+  .profile-container {
+    display: flex;
+    background: linear-gradient(
+      160deg,
+      #7d63a0e9 0%,
+      #785d9ee9 7%,
+      #6a4e98e9 27%,
+      #5a3c92e9 50%,
+      #50348ee9 77%,
+      #482d8ae9 100%
+    );
+    z-index: 2;
+    width: 100%;
+    border-radius: 0 0 15px 15px;
+    justify-content: center;
+    padding: 70px 0 50px 0;
+  }
+
+  .profile-picture-container {
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .profile-picture {
+    border-radius: 50%;
+    object-fit: cover;
+    width: 150px;
+    height: 150px; /* Ensure height matches width for a perfect circle */
+
+    /* --- The Detached Border Effect --- */
+    border: 3px solid white; /* The outer ring */
+    padding: 10px; /* The size of the gap between image and border */
+    background-clip: content-box; /* Optional: ensures background doesn't bleed into the gap */
+  }
+
+  .profile-upload {
+    display: none;
+  }
+
+  .profile-info {
+    text-align: center;
+    font-weight: 600;
+    color: white;
+    width: 100%;
+  }
+
+  .profile-username {
+    font-size: 2rem;
+    margin: 10px 0;
+  }
+
+  .followers {
+    display: flex;
+    gap: 50px;
+    justify-self: center;
+    margin-top: 20px;
+  }
+
+  .streak-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+  }
+
+  .title-progress {
+    font-size: 1.6em;
+    font-weight: 750;
+    color: #640295;
+  }
+
+  .course-progress {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+  }
+
+  #coursesModal{
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(5px);
+  }
+  .modal-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 30px 50px 30px;
+    border-radius: 20px;
+    background-color: #ffffff;
+    width: 90%;
+    max-width: 600px;
+    max-height: 80vh;
+  }
+  .modal-header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #ffffff !important;
+  }
+  .modal-header h2 {
+    font-size: 1rem;
+    font-weight: 700;
+  }
+  .modal-header .close-modal {
+    cursor: pointer;
+    font-size: 1.8rem;
+    font-weight: bold;
+    padding-left: 20px;
+  }
+  .modal-content .modal-body {
+    margin-top: 10px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding-right: 10px;
+  }
+
+  .allCoursesBTN {
+    position: relative;
+    width: 90%;
+    max-width: 500px;
+    --progress-container-width: 90%;
+    height: fit-content;
+    background: #f1edfa;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    transition: transform 0.2s;
+    box-shadow: 2px 4px 10px #d5c1fa;
+    border-radius: 20px;
+    overflow: hidden;
+    z-index: 2;
+    margin: 20px auto;
+
+    /* dejar espacio para el "borde" interno */
+    z-index: 0;
+    background-clip: padding-box; /* importante */
+  }
+
+  .allCoursesBTN::before {
+    content: "";
+    position: absolute;
+    inset: 0; /* ocupa todo el elemento */
+    padding: 2px; /* grosor del borde */
+    border-radius: inherit; /* respeta el mismo radius */
+    background: linear-gradient(
+      156.25deg,
+      #825d97 0%,
+      #ab4afd 50%,
+      #482d8a 100%
+    );
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  .allCoursesBTN p {
+    font-size: 1.25rem;
+    font-family: "Raleway";
+    font-weight: 700;
+
+    background: linear-gradient(90deg, #b969ff 0%, #ab4afd 50%, #b969ff 100%);
+    background-size: 200%;
+
+    animation: shimmer 5s linear infinite;
+    transition: transform 0.3s ease-in-out;
+
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .allCoursesBTN p:hover {
+    transform: scale(1.05);
+
+    animation: shimmer 1s linear infinite;
+  }
+
+  @keyframes shimmer {
+    0% {
+      background-position: 200% 0;
+    }
+    100% {
+      background-position: -200% 0;
+    }
+  }
+
+  /* Tablet: pantallas medianas (768px a 1024px) */
+  @media (min-width: 768px) and (max-width: 1024px) {
+    .profile {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      grid-template-rows: repeat(18, 4vh);
+      width: 100%;
+    }
+
+    /* fondo */
+    .profile-background {
+      grid-column: 1 / -1;
+      grid-row: 1 / 16;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 1;
+      border-radius: 0 0 40px 40px;
+    }
+
+    /* Foto de Perfil*/
+    .profile-container {
+      grid-column: 4 / 10;
+      grid-row: 3 / 14;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .profile-picture {
+      width: 200px; /* Tamaño controlado para tablet */
+      height: 200px;
+      border-radius: 50%;
+      border: 4px solid white;
+    }
+
+    .profile-upload {
+      display: none;
+    }
+
+    .profile-info {
+      text-align: center;
+      font-weight: 600;
+      color: white;
+      margin-top: 10px;
+    }
+
+    .profile-username {
+      font-size: 2rem;
+      margin: 10px;
+    }
+
+    .profile-picture-label img {
+      border: solid 2px rgb(0, 0, 0);
+    }
+
+    .followers {
+      display: flex;
+      justify-self: center;
+      gap: 150px;
+    }
+
+    .streak {
+      grid-row: 16 / 23;
+      grid-column: 2 / 12;
+      border: 2px solid rgb(55, 0, 76);
+      color: rgb(55, 0, 76);
+      border-radius: 20px;
+      z-index: 2;
+      padding: 20px;
+    }
+
+    .title-streak {
+      font-weight: 600;
+    }
+
+    .streak-current {
+      justify-self: center;
+      margin: 25px;
+    }
+
+    .days-streak {
+      font-size: 2rem;
+    }
+
+    .streak-longest {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .title-progress {
+      grid-column: 1 / -1;
+      grid-row: 23;
+      font-size: 1.6em;
+      font-weight: 800;
+      margin-left: 10px;
+      color: #640295;
+    }
+
+    .course-progress {
+      grid-column: 1 / -1;
+      grid-row: 24;
+      display: flex;
+      justify-content: center;
+    }
+
+    .allCoursesBTN {
+      grid-column: 1 / -1;
+      position: relative;
+      width: 90%;
+      max-width: 400px;
+      --progress-container-width: 90%;
+      height: fit-content;
+      background: #f1edfa;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-around;
+      padding: 1rem;
+      transition: transform 0.2s;
+      box-shadow: 2px 4px 10px #d5c1fa;
+      border-radius: 20px;
+      overflow: hidden;
+      z-index: 2;
+      margin: 0 auto;
+
+      /* dejar espacio para el "borde" interno */
+      z-index: 0;
+      background-clip: padding-box; /* importante */
+    }
+
+    .allCoursesBTN::before {
+      content: "";
+      position: absolute;
+      inset: 0; /* ocupa todo el elemento */
+      padding: 2px; /* grosor del borde */
+      border-radius: inherit; /* respeta el mismo radius */
+      background: linear-gradient(
+        156.25deg,
+        #825d97 0%,
+        #ab4afd 50%,
+        #482d8a 100%
+      );
+      -webkit-mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+      mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .allCoursesBTN p {
+      font-size: 1.25rem;
+      font-family: "Raleway";
+      font-weight: 700;
+
+      background: linear-gradient(90deg, #b969ff 0%, #ab4afd 50%, #b969ff 100%);
+      background-size: 200%;
+
+      animation: shimmer 5s linear infinite;
+      transition: transform 0.3s ease-in-out;
+
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .allCoursesBTN p:hover {
+      transform: scale(1.05);
+
+      animation: shimmer 1s linear infinite;
+    }
+
+    @keyframes shimmer {
+      0% {
+        background-position: 200% 0;
+      }
+      100% {
+        background-position: -200% 0;
+      }
+    }
+  }
+
+  /* --- DESKTOP (Pantallas mayores a 1024px) --- */
+  @media (min-width: 1025px) {
+    .profile {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      grid-template-rows: repeat(24, 4vh);
+      width: 100%;
+      overflow-x: hidden;
+    }
+
+    /* --- FONDO VIOLETA (Solo para la columna del perfil) --- */
+    .profile-background {
+      grid-column: 1 / -1;
+      grid-row: 1 / 14;
+      border-radius: 0 0 20px 20px;
+      object-fit: cover;
+      z-index: 1;
+    }
+
+    /* --- CONTENEDOR DE PERFIL (Izquierda) --- */
+    .profile-container {
+      grid-column: 5 / 9;
+      grid-row: 1;
+      z-index: 2; /* nivel superior al fondo que es z 1*/
+      padding: 30px 20px;
+    }
+
+    .profile-picture {
+      border: 3px solid rgb(0, 0, 0);
+    }
+
+    .streak {
+      grid-row: 14 / 20;
+      grid-column: 1 / -1;
+      border: 2px solid rgb(55, 0, 76);
+      color: rgb(55, 0, 76);
+      margin: 15px;
+      border-radius: 20px;
+      z-index: 2;
+      padding: 15px;
+    }
+
+    .title-progress {
+      font-size: 1.6em;
+      font-weight: 750;
+      margin: 20px 0 10px 15px;
+      color: #640295;
+      grid-column: 1 / -1;
+      grid-row: 20;
+    }
+
+    .course-progress {
+      grid-row: 24;
+      grid-column: 1 / -1;
+    }
+
+    .allCoursesBTN {
+      /* El botón de abajo */
+      grid-column: 1 / -1;
+      grid-row: 28;
+      width: 100%; /* Casi toda la pantalla */
+      max-width: 1100px; /* Límite para que no se vea exagerado en monitores 4K */
+    }
+  }
+
+  /* Contenedor de fondo oscuro */
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(5px);
+    /* Centrado absoluto */
+    display: none;
+    justify-content: center;
+    align-items: center;
+  }
+
+  /* El encabezado (Título y X) - Se mantiene FIJO */
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 25px; /* Añadimos espacio interno */
+    background-color: #f1edfa;
+    border-bottom: 1px solid rgba(171, 74, 253, 0.2);
+  }
+
+  .modal-content {
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    max-height: 80vh; /* O la altura que prefieras */
+    border-radius: 20px;
+  }
+
+  .modal-body {
+    display: block;
+    width: 100%;
+    overflow-y: auto;
+    box-sizing: border-box;
+    place-items: center;
+  }
+
+  .modal-body::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .modal-body::-webkit-scrollbar-thumb {
+    background: #ab4afd;
+    border-radius: 10px;
+  }
+</style>

@@ -1,0 +1,19 @@
+---
+import BarMenu from "@components/barMenu.astro";
+import Navbar from "@components/navbar.astro";
+import AuthLayout from "@layouts/AuthLayout.astro";
+import BackBtn from "@components/register-login/backBtn.astro";
+import CoursesTitle from "@components/coursesTitle.astro";
+---
+
+<AuthLayout title="Curso HTML">
+  <Navbar title="Cursos" />
+  <CoursesTitle title="HTML" />
+  <BarMenu />
+</AuthLayout>
+
+<style>
+  body {
+    background: #f1edfa;
+  }
+</style>
