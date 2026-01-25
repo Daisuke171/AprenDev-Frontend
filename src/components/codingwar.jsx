@@ -1,7 +1,7 @@
-'use client'
+"use client";
 
 import { useState } from "react";
-import "../styles/game.css"
+import "../styles/game.css";
 import code from "../assets/codes.json";
 import planets from "../assets/astronomy.json";
 
@@ -19,14 +19,14 @@ export default function CodingWarPage() {
     if (key.length > 1 && key != "Enter" && key != "Backspace") return;
 
     // Change level
-    if (cursorPosition == originalText.length){
+    if (cursorPosition == originalText.length) {
       // change level and reset cursor position
       return;
     }
 
-    console.log(key)
+    console.log(key);
 
-    if (key == "Enter"){
+    if (key == "Enter") {
       let nextIndex = typedText.indexOf("\n", newBasePosition + 1);
 
       // No more newlines → go to end
@@ -39,9 +39,12 @@ export default function CodingWarPage() {
       while (originalText[nextIndex + 1] === "\n") {
         nextIndex++;
       }
-      if(originalText[nextIndex] == "\n" && originalText[nextIndex+1] == " "){
-        let whitespacePos = nextIndex+1;
-        while(originalText[whitespacePos] == " "){
+      if (
+        originalText[nextIndex] == "\n" &&
+        originalText[nextIndex + 1] == " "
+      ) {
+        let whitespacePos = nextIndex + 1;
+        while (originalText[whitespacePos] == " ") {
           nextIndex++;
           whitespacePos++;
         }
@@ -54,19 +57,19 @@ export default function CodingWarPage() {
       return;
     }
 
-    if (key == "Backspace" && cursorPosition>=newBasePosition){
-      if(cursorPosition==newBasePosition){
-        resetColor(); 
+    if (key == "Backspace" && cursorPosition >= newBasePosition) {
+      if (cursorPosition == newBasePosition) {
+        resetColor();
         return;
       }
 
-      setCursorPosition(cursorPosition-1);
-      resetColor(cursorPosition-1);
+      setCursorPosition(cursorPosition - 1);
+      resetColor(cursorPosition - 1);
       return;
     }
 
     // Stop typing when hittin endl
-    if(originalText[cursorPosition] === '\n'){
+    if (originalText[cursorPosition] === "\n") {
       return;
     }
 
@@ -80,8 +83,7 @@ export default function CodingWarPage() {
 
       setTypedText(updated);
       setCursorPosition(cursorPosition + 1);
-    }
-    else{
+    } else {
       const updated = [...typedText];
       updated[cursorPosition] = (
         <span style={{ color: "red" }} key={cursorPosition}>
@@ -92,27 +94,29 @@ export default function CodingWarPage() {
       setTypedText(updated);
       setCursorPosition(cursorPosition + 1);
     }
-    
   };
 
   const resetColor = (i) => {
     const updated = [...typedText];
     updated[i] = originalText[i];
     setTypedText(updated);
-  }
+  };
 
   return (
-    <main>
-      <pre id="textViewer">{typedText}</pre>
-      <input 
-        id="inputText"
-        autoFocus
-        type="text" 
-        placeholder="Escriba Aqui"
-        onKeyDown={(e) => handleKeyDown(e)}
-      ></input>
-      {/* <div>position: {cursorPosition}</div> */}
-    </main>
+    <>
+      <main className="game-wrapper">
+        <div className="editor-shell">
+          <pre className="editor-container">{typedText}</pre>
+        </div>
+
+        <input id="inputText" autoFocus type="text" onKeyDown={handleKeyDown} />
+      </main>
+
+      <aside className="game-wrapper">
+        <div className="editor-shell">
+          <pre className="editor-container">{originalText}</pre>
+        </div>
+      </aside>
+    </>
   );
 }
-

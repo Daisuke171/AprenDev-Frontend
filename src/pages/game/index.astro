@@ -2,11 +2,21 @@
 import Navbar from "../../components/navbar.astro";
 import CodingWarPage from "../../components/codingwar.jsx";
 import Layout from "../../layouts/AuthLayout.astro";
+import BarMenu from "@components/barMenu.astro";
 ---
 
 <Layout>
   <Navbar />
-  <CodingWarPage client:load />
+  <section>
+    <CodingWarPage client:load />
+  </section>
+  <BarMenu />
 </Layout>
 
 
+<style>
+  section {
+    margin: 80px 0;
+    padding: 0 20px;
+  }
+</style>

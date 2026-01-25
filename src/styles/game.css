@@ -1,25 +1,62 @@
-main{
+.game-wrapper {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
+  gap: 20px;
 }
 
-#textViewer {
-  max-width: 80%;
-  color: #fff;
-  font-size: 1.5rem;
-  border-radius: 20px;
-  padding: 1rem;
-  border: black 1px solid;
-  background-color: oklch(0.2429 0.1162 277.23);
-  overflow-wrap: break-word;
+/* Editor shell */
+.editor-shell {
+  width: 100%;
+  max-width: 700px;
+  height: 420px;
+  background: #1a1b2e;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  overflow: hidden;
+  font-family: 'Fira Code', monospace;
+}
+
+/* Code area */
+.editor-container {
+  height: 100%;
+  padding: 25px;
+  font-size: 15px;
+  line-height: 1.6;
+  color: #ffffff;
   white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-y: auto;
+}
+
+/* Typing colors */
+.correct {
+  color: limegreen;
+}
+
+.wrong {
+  color: #ff5f5f;
+}
+
+/* Cursor */
+.cursor {
+  background: rgba(255,255,255,0.18);
+  border-radius: 2px;
+  animation: blink 1s steps(2, start) infinite;
 }
 
 #inputText {
-  width: 85%;
-  padding: 1rem;
-  border-radius: 10px;
-  box-sizing: border-box;
+  width: 100%;
+  max-width: 700px;
+  padding: 12px;
+  font-size: 16px;
+  margin-top: 10px;
+}
+
+
+/* Cursor blink */
+@keyframes blink {
+  to {
+    background: transparent;
+  }
 }
