@@ -4,6 +4,8 @@ import { useState } from "react";
 import "../styles/game.css";
 import code from "../assets/codes.json";
 import planets from "../assets/astronomy.json";
+import { socket } from "src/lib/socket";
+import { useEffect } from "react";
 
 const originalText = planets[0].text;
 
@@ -11,6 +13,28 @@ export default function CodingWarPage() {
   const [cursorPosition, setCursorPosition] = useState(0);
   const [newBasePosition, setnewBasePosition] = useState(0);
   const [typedText, setTypedText] = useState(originalText.split(""));
+
+  /// SOCKETS
+  const [roomId, setRoomId] = useState(null);
+
+  useEffect(() => {
+    socket.connect();
+
+    socket.emit("createRoom", "Test Room", (response) => {
+      if (response?.success) {
+        setRoomId(response.roomId);
+      }
+    });
+
+    socket.on("typingUpdate", (data) => {
+      // update opponent state here
+    });
+
+    return () => {
+      socket.off("typingUpdate");
+      socket.disconnect();
+    };
+  }, []);
 
   const handleKeyDown = (e) => {
     const key = e.key;
@@ -83,6 +107,14 @@ export default function CodingWarPage() {
 
       setTypedText(updated);
       setCursorPosition(cursorPosition + 1);
+
+      if (roomId) {
+        socket.emit("typingProgress", {
+          roomId,
+          lineIndex: pos,
+          input: key,
+        });
+      }
     } else {
       const updated = [...typedText];
       updated[cursorPosition] = (
