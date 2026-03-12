@@ -3,6 +3,7 @@ import AuthLayout from "@layouts/AuthLayout.astro";
 import MainLayout from "@layouts/MainLayout.astro";
 import CodeEditor from "@components/codeEditor.astro";
 import LessonLayout from "@layouts/LessonLayout.astro";
+import FinishLesson from "@components/FinishLesson.astro";
 ---
 
 <AuthLayout>
@@ -18,7 +19,8 @@ import LessonLayout from "@layouts/LessonLayout.astro";
           />
         </div>
 
-        <a type="button" class="button-style" href="lesson-four">SIGUIENTE</a>
+        <button type="button" id="next-lesson-btn" class="button-style">SIGUIENTE</button>
+        <FinishLesson currentLessonId="lesson-four" nextLessonUrl="/course/course-html" />
       </section>
     </LessonLayout>
   </MainLayout>

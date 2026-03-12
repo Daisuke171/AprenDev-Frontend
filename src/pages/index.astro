@@ -1,5 +1,5 @@
 ---
-export const prerender = false;
+// 1. Primero todas las importaciones
 import BarMenu from "@components/barMenu.astro";
 import CourseProgress from "@components/courseProgress.astro";
 import CoursesCards from "@components/coursesCards.astro";
@@ -7,6 +7,31 @@ import Navbar from "@components/navbar.astro";
 import AuthLayout from "@layouts/AuthLayout.astro";
 import CircleLinks from "src/assets/circleLinks.astro";
 import ModalCourse from "@components/modalCourse.astro";
+
+// 2. Exportaciones de configuración
+export const prerender = false;
+
+// 3. Lógica que usa el objeto Astro
+const { cookies } = Astro;
+const sessionId = cookies.get("session_id")?.value;
+
+let completedLessons = [];
+
+if (sessionId) {
+  try {
+    const response = await fetch("http://localhost:3010/progress", {
+      headers: {
+        Cookie: `session_id=${sessionId}`,
+      },
+    });
+    const data = await response.json();
+    if (data.ok) {
+      completedLessons = data.completed;
+    }
+  } catch (error) {
+    console.error("Error cargando progreso:", error);
+  }
+}
 ---
 
 <AuthLayout title="Home">
@@ -58,7 +83,7 @@ import ModalCourse from "@components/modalCourse.astro";
     </div>
 
     <div class="progressContainer">
-      <CourseProgress />
+      <CourseProgress completedLessons={completedLessons} totalLessons={5} />
     </div>
 
     <button type="button" class="allCoursesBTN">
@@ -82,22 +107,22 @@ import ModalCourse from "@components/modalCourse.astro";
     const modalCursos = document.getElementById("modalCursos");
     const closeBtn = document.getElementById("modalCursos-close");
 
-    // Abrir modal
-    circleCursos.addEventListener("click", () => {
-      modalCursos.classList.remove("hidden");
-    });
+    // Validamos que existan para evitar el error de "null"
+    if (circleCursos && modalCursos && closeBtn) {
+      circleCursos.addEventListener("click", () => {
+        modalCursos.classList.remove("hidden");
+      });
 
-    // Cerrar modal con la X
-    closeBtn.addEventListener("click", () => {
-      modalCursos.classList.add("hidden");
-    });
-
-    // Cerrar modal al hacer clic fuera del contenido
-    modalCursos.addEventListener("click", (e) => {
-      if (e.target === modalCursos) {
+      closeBtn.addEventListener("click", () => {
         modalCursos.classList.add("hidden");
-      }
-    });
+      });
+
+      modalCursos.addEventListener("click", (e) => {
+        if (e.target === modalCursos) {
+          modalCursos.classList.add("hidden");
+        }
+      });
+    }
   });
 </script>
 

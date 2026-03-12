@@ -6,26 +6,41 @@ import Logout from "../assets/logout.astro";
 const { title, transparent } = Astro.props; //prop para trasnparente
 let navTitle = title ?? "home";
 
+//saludo en home
 if (!title) {
   const token = Astro.cookies.get("session_id")?.value;
   if (token) {
-    const res = await fetch("http://localhost:3010/auth/session", {
-      headers: { cookie: `session_id=${token}` },
-    });
-    if (res.ok) {
-      const data = await res.json();
-      navTitle = `Hola ${data.username}`;
+    try {
+      const apiBase =
+        import.meta.env.PUBLIC_API_BASE ?? "http://localhost:3010";
+
+      const res = await fetch(`${apiBase}/auth/session`, {
+        headers: { cookie: `session_id=${token}` },
+      });
+      if (res.ok) {
+        const data = await res.json();
+        navTitle = `Hola ${data.username}`;
+      } else {
+        console.warn("Session fetch returned status:", res.status);
+      }
+    } catch (err) {
+      console.warn(
+        "Error fetching session (server-side):",
+        err?.message ?? err,
+      );
+      // Mantener navTitle por defecto (no interrumpir SSR)
     }
   }
 }
 ---
+
 <!-- si es true se pone transparente -->
-<nav class={`navbar ${transparent ? "navbar--transparent" : ""}`}> 
+<nav class={`navbar ${transparent ? "navbar--transparent" : ""}`}>
   <button id="btnBurguer" aria-label="Open Menu">
     <Burguer w="35px" h="35px" />
   </button>
 
-  <a id="navTitle">{navTitle}</a>
+  <a id="navTitle" data-default={navTitle}>{navTitle}</a>
 
   <section id="rightSideNav">
     <button class="icon-btn"><Bell w="22px" /></button>
@@ -47,7 +62,6 @@ if (!title) {
     <div class="menu-section">
       <p class="section-label">Cuenta</p>
       <a href="/profile">Configuración de Perfil</a>
-
     </div>
 
     <div class="menu-section">
@@ -190,12 +204,27 @@ if (!title) {
 </style>
 
 <script>
-  // Function to initialize logic (useful if you use View Transitions)
+  import { io } from "socket.io-client";
+
   const initNav = () => {
+    // Mantén socket para otras funciones si quieres
+    const SOCKET_URL =
+      import.meta.env.VITE_WS_URL ??
+      import.meta.env.PUBLIC_API_BASE ??
+      "http://localhost:3010";
+
+    const socket = io(SOCKET_URL, {
+      withCredentials: true,
+      transports: ["websocket"], // evita polling XHR
+      reconnectionAttempts: 3,
+    });
+
+    
     const btn = document.getElementById("btnBurguer");
     const menu = document.getElementById("sideMenu");
     const overlay = document.getElementById("menuOverlay");
     const btnLogout = document.getElementById("btnLogout");
+    const navTitleEl = document.getElementById("navTitle");
 
     const toggleMenu = (show) => {
       menu?.classList.toggle("open", show);
@@ -205,21 +234,43 @@ if (!title) {
     btn?.addEventListener("click", () => toggleMenu(true));
     overlay?.addEventListener("click", () => toggleMenu(false));
 
+    // Actualiza el saludo desde el servidor (envía cookies httpOnly automáticamente)
+    async function clientFetchSession() {
+      try {
+        const res = await fetch("http://localhost:3010/auth/session", {
+          credentials: "include",
+        });
+        if (!res.ok) return;
+        const data = await res.json();
+        if (navTitleEl) navTitleEl.textContent = `Hola ${data.username}`;
+      } catch (err) {
+        console.error("Error fetching session:", err);
+      }
+    }
+
+    // Logout por HTTP (recomendado): el servidor borrará la cookie httpOnly
     btnLogout?.addEventListener("click", async () => {
       try {
         await fetch("http://localhost:3010/auth/logout", {
           method: "POST",
           credentials: "include",
         });
+      } catch (err) {
+        console.error("Logout error:", err);
+      } finally {
+        // Redirigir o actualizar UI
         window.location.href = "/login";
-      } catch (e) {
-        console.error("Logout failed", e);
       }
     });
+
+    socket.on("error", (err) => {
+      console.error("Error desde el servidor:", err?.message ?? err);
+    });
+
+    // Llamada inicial para que el nav muestre el username si hay sesión
+    clientFetchSession();
   };
 
-  // Runs on initial load
   initNav();
-  // Runs on View Transitions navigation
   document.addEventListener("astro:after-swap", initNav);
 </script>

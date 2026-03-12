@@ -1,5 +1,23 @@
 ---
-const {} = Astro.props;
+// CourseProgress.astro
+interface Props {
+  completedLessons?: string[];
+  totalLessons?: number;
+  nextLessonUrl?: string;
+}
+
+const {
+  completedLessons = [],
+  totalLessons = 5,
+  nextLessonUrl = "/course/lesson-one", // Valor por defecto
+} = Astro.props;
+
+// Calculamos el ratio (ej: 3 de 5 = 0.6)
+const progressRatio =
+  totalLessons > 0 ? completedLessons.length / totalLessons : 0;
+
+// Formateamos el texto dinámico
+const currentCount = completedLessons.length;
 ---
 
 <section class="courseProgress">
@@ -8,16 +26,17 @@ const {} = Astro.props;
       <h3>Continue learning...</h3>
       <img src="/bookStar.png" alt="book" />
       <div class="progressBar">
-        <div class="progressFillScale" style="--p:0.9;"></div>
-        <!-- 1.7 == 100% -->
+        <div class="progressFillScale" style={`--p: ${progressRatio.toFixed(2)}`}></div>
       </div>
     </div>
 
     <div class="progressInfo">
       <p>Module: HTML</p>
-      <p>Lesson: 3 of 5</p>
+      <p>Lesson: {currentCount} of {totalLessons}</p>
     </div>
-    <button type="button" class="button-style">Continue</button>
+    <a href={nextLessonUrl} class="button-style" style="text-decoration: none;">
+      Continue
+    </a>
   </div>
 
   <div class="imagesContainer">
@@ -128,14 +147,9 @@ const {} = Astro.props;
     width: 100%;
     transform-origin: left center;
     transform: scaleX(var(--p, 0));
-    background: linear-gradient(
-      90deg,
-      #da9d4f 0%,
-      #da9d4f 60%,
-      rgba(248, 242, 242, 0) 61.54%
-    );
+    background: linear-gradient(90deg, #da9d4f 0%, #ffc170 100%);
     filter: drop-shadow(0px 1px 5px #da9d4f);
-    border-radius: 10px 0 0 10px;
+    border-radius: 10px;
     transition: transform 0.25s ease;
   }
 

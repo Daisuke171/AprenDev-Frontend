@@ -1,5 +1,24 @@
 ---
 const { width = "40px", height = "40px" } = Astro.props;
+const token = Astro.cookies.get("session_id")?.value;
+let avatarUrl = "/image-perfil.png"; // fallback
+
+if (token) {
+  try {
+    const API_BASE = import.meta.env.PUBLIC_API_BASE ?? "http://localhost:3010";
+    const res = await fetch(`${API_BASE}/auth/session`, {
+      headers: { cookie: `session_id=${token}` },
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (data.avatar) {
+        avatarUrl = data.avatar;
+      }
+    }
+  } catch (err) {
+    console.warn("Error obteniendo avatar:", err);
+  }
+}
 ---
 
 <nav class="barMenu">
@@ -24,7 +43,7 @@ const { width = "40px", height = "40px" } = Astro.props;
   </a>
 
   <a class="iconContainer" href="/profile">
-    <div class="elipseUser"></div>
+    <img src={avatarUrl} alt="Foto de perfil" class="profile-icon" />
     <p>Perfil</p>
   </a>
 </nav>
@@ -48,7 +67,7 @@ const { width = "40px", height = "40px" } = Astro.props;
     width: 40px;
     height: 40px;
   }
-  .iconContainer{
+  .iconContainer {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -59,16 +78,10 @@ const { width = "40px", height = "40px" } = Astro.props;
     color: #24014a;
   }
 
-  .elipseUser {
+  .profile-icon {
     width: 40px;
     height: 40px;
-    background: linear-gradient(
-      156.25deg,
-      #825d97 0%,
-      #ab4afd 50%,
-      #482d8a 100%
-    );
     border-radius: 50%;
-
+    object-fit: cover;
   }
 </style>

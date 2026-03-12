@@ -1,9 +1,29 @@
 ---
+export const prerender = false; // VITAL: Fuerza a Astro a ejecutarse en cada visita
+import CoursesTitle from "@components/coursesTitle.astro";
 import BarMenu from "@components/barMenu.astro";
 import Navbar from "@components/navbar.astro";
 import AuthLayout from "@layouts/AuthLayout.astro";
 import BackBtn from "@components/register-login/backBtn.astro";
-import CoursesTitle from "@components/coursesTitle.astro";
+
+const session_id = Astro.cookies.get("session_id")?.value;
+let completedLessons = [];
+
+if (session_id) {
+  try {
+    const res = await fetch("http://localhost:3010/progress", {
+      headers: {
+        // Pasamos la cookie manualmente para que NestJS sepa quién es el usuario
+        Cookie: `session_id=${session_id}`,
+      },
+    });
+    const data = await res.json();
+    completedLessons = data.completed || [];
+    console.log("Lecciones completadas recuperadas:", completedLessons); // Mira esto en tu terminal
+  } catch (error) {
+    console.error("Error al pedir progreso:", error);
+  }
+}
 ---
 
 <AuthLayout title="Curso HTML">

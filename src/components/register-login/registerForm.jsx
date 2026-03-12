@@ -1,6 +1,12 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { io } from "socket.io-client";
 import "../../styles/global.css";
 import "../../styles/button.css";
+
+const socket = io("http://localhost:3010", {
+  withCredentials: false,
+  transports: ["websocket", "polling"] 
+});
 
 export default function RegisterForm() {
   const [username, setUsername] = useState("");
@@ -12,41 +18,49 @@ export default function RegisterForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [showPassword2, setShowPassword2] = useState(false);
 
-  async function handleSubmit(e) {
+  // Escuchar la respuesta del servidor
+  useEffect(() => {
+    socket.on("register_response", (data) => {
+      if (data.status === "ok") {
+        alert(`✅ Usuario ${data.payload.username} registrado correctamente`);
+        // Redirigir al login
+        window.location.href = "/login";
+      } else {
+        alert(`❌ Error: ${data.message || "No se pudo registrar"}`);
+      }
+    });
+
+    socket.on("error", (err) => {
+      alert(`❌ Error del servidor: ${err.message}`);
+    });
+
+    return () => {
+      socket.off("register_response");
+      socket.off("error");
+    };
+  }, []);
+
+  function handleSubmit(e) {
     e.preventDefault();
+
+    // Validación básica antes de enviar al socket
+    if (dni.length < 8) {
+      alert("❌ El DNI parece demasiado corto");
+      return;
+    }
 
     if (password !== confirmPassword) {
       alert("❌ Las contraseñas no coinciden");
       return;
     }
 
-    try {
-      const res = await fetch("http://localhost:3010/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          username: username.trim(),
-          lastname: lastname.trim(),
-          dni: Number(dni),
-          birthday,
-          password,
-          confirmPassword,
-        }),
-      });
-
-      const data = await res.json();
-
-      //si el back llega al return y el usuario es válido se ejecuta el if
-      //si responde con false se ejecuta el else
-      if (res.ok && data.user) {
-        alert(`✅ Usuario ${data.user.username} registrado correctamente`);
-      } else {
-        alert(`❌ Error: ${data.message || "No se pudo registrar"}`);
-      }
-    } catch (err) {
-      alert("❌ Error de conexión con el servidor");
-      console.error(err);
-    }
+    socket.emit("register", {
+      username: username.trim(),
+      lastname: lastname.trim(),
+      dni: dni.trim(),
+      birthday,
+      password,
+    });
 
     // Limpiar inputs después de enviar
     setUsername("");
@@ -274,7 +288,7 @@ function ClickGlowSpan({ children }) {
       setAnimating(false);
       // next tick set true so animation restarts
       requestAnimationFrame(() =>
-        requestAnimationFrame(() => setAnimating(true))
+        requestAnimationFrame(() => setAnimating(true)),
       );
     } else {
       setAnimating(true);

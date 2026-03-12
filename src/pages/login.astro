@@ -1,5 +1,5 @@
 ---
-import LoginForm from "@components/Login.astro";
+import LoginFormJSX from "@components/register-login/loginForm.jsx";
 import BackBtn from "@components/register-login/backBtn.astro";
 import AuthLayout from "@layouts/AuthLayout.astro";
 import Bubble from "@components/register-login/bubble.astro";
@@ -9,7 +9,7 @@ import Bubble from "@components/register-login/bubble.astro";
   <BackBtn />
   
   <Bubble />
-  <LoginForm client:load />
+  <LoginFormJSX client:load />
 </AuthLayout>
 
 <style>

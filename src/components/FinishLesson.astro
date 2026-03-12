@@ -1,0 +1,40 @@
+---
+// src/components/FinishLesson.astro
+interface Props {
+  currentLessonId: string;
+  nextLessonUrl: string;
+}
+const { currentLessonId, nextLessonUrl } = Astro.props;
+---
+
+<script define:vars={{ currentLessonId, nextLessonUrl }}>
+  const btn = document.getElementById("next-lesson-btn");
+
+  if (btn) {
+    btn.addEventListener("click", async (e) => {
+      // 1. Evitamos cualquier comportamiento por defecto
+      e.preventDefault();
+      console.log("Guardando progreso para:", currentLessonId);
+
+      try {
+        // 2. Usamos await para que la ejecución se detenga aquí hasta que NestJS responda
+        const response = await fetch("http://localhost:3010/progress/complete", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ lessonId: currentLessonId }),
+          credentials: "include",
+        });
+
+        if (response.ok) {
+           console.log("¡Guardado con éxito en Redis!");
+        }
+      } catch (error) {
+        console.error("Error al conectar con NestJS:", error);
+      } finally {
+        // 3. SOLO cuando la petición terminó (bien o mal), navegamos
+        console.log("Navegando a:", nextLessonUrl);
+        window.location.href = nextLessonUrl;
+      }
+    });
+  }
+</script>

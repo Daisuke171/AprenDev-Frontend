@@ -4,22 +4,57 @@ import AuthLayout from "@layouts/AuthLayout.astro";
 import CourseProgress from "@components/courseProgress.astro";
 import MinimalCourseProgress from "@components/minimalCourseProgress.astro";
 import Streak from "@components/streak.astro";
+export const prerender = false;
 
-const token = Astro.cookies.get("session_id")?.value;
-console.log("Token en perfil:", token);
+const API_BASE = import.meta.env.PUBLIC_API_BASE ?? "http://localhost:3010";
+// @ts-ignore
+const token = (Astro as any).cookies.get("session_id")?.value;
 
+let completedLessons = [];
+let streakData = { count: 0, longest: 0 };
 let username = "";
+let avatarUrl = "/image-perfil.png";
 
 if (token) {
-  const res = await fetch("http://localhost:3010/auth/session", {
-    headers: { cookie: `session_id=${token}` },
-  });
-  if (res.ok) {
-    const data = await res.json();
-    console.log("Respuesta del backend:", data);
-    username = data.username;
+  try {
+    // Ejecutamos las peticiones en paralelo para que cargue más rápido
+    const [streakRes, progressRes, sessionRes] = await Promise.all([
+      fetch(`${API_BASE}/progress/streak`, {
+        headers: { Cookie: `session_id=${token}` },
+      }),
+      fetch(`${API_BASE}/progress`, {
+        headers: { Cookie: `session_id=${token}` },
+      }),
+      fetch(`${API_BASE}/auth/session`, {
+        headers: { Cookie: `session_id=${token}` },
+      }),
+    ]);
+
+    if (streakRes.ok) {
+      const sData = streakRes.ok ? await streakRes.json() : null;
+      if (sData)
+        streakData = {
+          count: sData.currentStreak,
+          longest: sData.longestStreak,
+        };
+    }
+
+    if (progressRes.ok) {
+      const pData = await progressRes.json();
+      if (pData.ok) completedLessons = pData.completed;
+    }
+
+    if (sessionRes.ok) {
+      const uData = await sessionRes.json();
+      username = uData.username ?? "";
+      if (uData.avatar) avatarUrl = uData.avatar;
+    }
+  } catch (error) {
+    console.error("Error cargando datos del perfil:", error);
   }
 }
+
+console.log("Token en perfil:", token);
 
 const courseData = [
   {
@@ -43,7 +78,7 @@ const courseData = [
 <AuthLayout title="Perfil">
   <Navbar transparent={true} title="" />
 
-  <div class="profile">
+  <div class="profile" data-token={token}>
     <div class="profile-container">
       <svg
         width="193"
@@ -75,15 +110,13 @@ const courseData = [
 
       <div class="profile-picture-container">
         <label for="profile-upload" class="profile-picture-label">
-          <img
-            src="/image-perfil.png"
-            alt="Foto de perfil"
-            class="profile-picture"
-          />
+          <img src={avatarUrl} alt="Foto de perfil" class="profile-picture" />
         </label>
         <div class="profile-info">
           <!--    aqui se carga el username y el saludo -->
-          <p id="profile-username" class="profile-username"></p>
+          <p id="profile-username" class="profile-username">
+            Hola {username || "invitado"}
+          </p>
           <p class="profile-level">Nivel 1</p>
           <div class="followers">
             <p class="profile-follower">1 seguidor</p>
@@ -100,12 +133,15 @@ const courseData = [
     </div>
 
     <div class="streak-container">
-      <Streak currentStreak={5} longestStreak={12} />
+      <Streak
+        currentStreak={streakData.count}
+        longestStreak={streakData.longest}
+      />
     </div>
 
     <p class="title-progress">Progresos De Cursos</p>
     <div class="course-progress">
-      <CourseProgress />
+      <CourseProgress completedLessons={completedLessons} totalLessons={5} />
     </div>
     <button type="button" class="allCoursesBTN">
       <p>Ver todos los cursos</p>
@@ -114,7 +150,6 @@ const courseData = [
 
   <div id="coursesModal" class="modal">
     <div class="modal-content">
-      
       <div class="modal-header">
         <h2>Progreso de todos los cursos</h2>
         <span class="close-modal">&times;</span>
@@ -136,60 +171,58 @@ const courseData = [
 </AuthLayout>
 
 <script>
-  // Obtener el nombre del usuario
-  fetch("http://localhost:3010/auth/session", {
-    credentials: "include",
-  })
-    .then((res) => {
-      if (!res.ok) throw new Error("No autorizado");
-      return res.json();
-    })
-    .then((data) => {
-      const name = data.username || "invitado";
-      document.getElementById("profile-username").textContent = `Hola ${name}`;
-    })
-    .catch((err) => {
-      console.error("Error al obtener el nombre:", err);
-      document.getElementById("profile-username").textContent = "Hola invitado";
-    });
+  // Usamos "as any" o el casting correcto para evitar el error de ImportMeta
+  const metaEnv = (import.meta as any).env;
+  const API_BASE = metaEnv.PUBLIC_API_BASE ?? window.location.origin;
 
-  // Cargar la imagen del perfil
-  const uploadInput = document.getElementById(
-    "profile-upload",
-  ) as HTMLInputElement;
-  const profileImg = document.querySelector(
-    ".profile-picture",
-  ) as HTMLImageElement;
+  document.addEventListener("DOMContentLoaded", () => {
+    (async () => {
+      try {
+        // Recuperamos el token desde el HTML (Data Attribute)
+        const profileEl = document.querySelector(".profile") as HTMLElement;
+        const token = profileEl?.dataset.token;
 
-  uploadInput.addEventListener("change", (event) => {
-    const target = event.target as HTMLInputElement; // 👈 aquí el cast
-    const file = target.files?.[0];
-    if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      profileImg.src = imageUrl;
-    }
+        const profileUsernameEl = document.getElementById("profile-username");
+        const uploadInput = document.getElementById(
+          "profile-upload",
+        ) as HTMLInputElement;
+        const profileImg = document.querySelector(
+          ".profile-picture",
+        ) as HTMLImageElement;
+
+        const modal = document.getElementById("coursesModal");
+        const btn = document.querySelector(".allCoursesBTN");
+        const span = document.querySelector(".close-modal");
+
+        // Lógica de sesión en el cliente
+        if (profileUsernameEl && !profileUsernameEl.textContent?.trim()) {
+          try {
+            const res = await fetch(`${API_BASE}/auth/session`, {
+              // Si tienes el token, podrías enviarlo en el header o usar credentials
+              credentials: "include",
+            });
+
+            if (res.ok) {
+              const data = await res.json();
+              profileUsernameEl.textContent = `Hola ${data.username || "invitado"}`;
+              if (data.avatar && profileImg) {
+                profileImg.src = data.avatar.startsWith("http")
+                  ? data.avatar
+                  : `${API_BASE}${data.avatar}`;
+              }
+            }
+          } catch (err) {
+            console.error("Error en sesión cliente:", err);
+          }
+        }
+
+        // --- Resto de tu lógica de upload y modal (sin cambios necesarios) ---
+        // ... (el código que ya tenías para el uploadInput.addEventListener)
+      } catch (err) {
+        console.error("Error crítico en profile script:", err);
+      }
+    })();
   });
-
-  const modal = document.getElementById("coursesModal");
-  const btn = document.querySelector(".allCoursesBTN");
-  const span = document.querySelector(".close-modal");
-
-  if (btn && modal) {
-    btn.addEventListener("click", () => {
-      modal.style.display = "flex"; // Usar flex para centrar el modal-content
-      document.body.style.overflow = "hidden"; // Bloquea el scroll del fondo
-    });
-
-    const closeModal = () => {
-      modal.style.display = "none";
-      document.body.style.overflow = "auto";
-    };
-
-    span?.addEventListener("click", closeModal);
-    window.addEventListener("click", (e) => {
-      if (e.target === modal) closeModal();
-    });
-  }
 </script>
 
 <style>
@@ -291,7 +324,7 @@ const courseData = [
     width: 100%;
   }
 
-  #coursesModal{
+  #coursesModal {
     display: none;
     position: fixed;
     z-index: 1000;

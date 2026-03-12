@@ -1,6 +1,6 @@
 ---
 import BarMenu from "@components/barMenu.astro";
-import CodeEditor from "@components/codeEditor.astro";
+import FinishLesson from "@components/FinishLesson.astro";
 import Navbar from "@components/navbar.astro";
 import AuthLayout from "@layouts/AuthLayout.astro";
 import LessonLayout from "@layouts/LessonLayout.astro";
@@ -9,7 +9,7 @@ import LessonLayout from "@layouts/LessonLayout.astro";
 <AuthLayout title="HTML - Lesson 1">
   <Navbar title="Cursos" />
 
-  <LessonLayout title="HTML - Lección 1" href="/course/course-html">
+  <LessonLayout title="HTML - Lección 1" nextLessonUrl="/course/html">
     <section class="lesson">
       <h1>¿Qué es HTML?</h1>
       <p>
@@ -56,10 +56,17 @@ import LessonLayout from "@layouts/LessonLayout.astro";
   <span style="color:#9cdcfe;">¡Hola, mundo!</span>
 <span style="color:#da9d4f;">&lt;/h1&gt;</span> <span style="color:#6a9955;">← se cierra la cajita</span>
 </pre>
-
-
-
-      <a type="button" class="button-style" href="lesson-two">SIGUIENTE</a>
+      <button
+        type="button"
+        id="next-lesson-btn"
+        class="button-style"
+      >
+        SIGUIENTE
+</button>
+      <FinishLesson
+        currentLessonId="lesson-one"
+        nextLessonUrl="/course/course-html"
+      />
     </section>
   </LessonLayout>
 

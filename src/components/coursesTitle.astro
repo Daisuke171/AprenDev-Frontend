@@ -1,44 +1,101 @@
 ---
 const { title } = Astro.props;
 import BackBtn from "@components/register-login/backBtn.astro";
+
+const sessionCookie = Astro.cookies.get("session_id")?.value;
+let completedLessons = [];
+
+if (sessionCookie) {
+  try {
+    const response = await fetch("http://localhost:3010/progress", {
+      // Ajusta a tu puerto de NestJS
+      headers: {
+        Cookie: `session_id=${sessionCookie}`,
+      },
+    });
+    const data = await response.json();
+    completedLessons = data.completed || [];
+  } catch (e) {
+    console.error("Error cargando progreso:", e);
+  }
+}
+
+// Definimos el orden de las lecciones para validar la secuencia
+const isLessonOneDone = completedLessons.includes("lesson-one");
+const isLessonTwoDone = completedLessons.includes("lesson-two");
+const isLessonThreeDone = completedLessons.includes("lesson-three");
+const isLessonFourDone = completedLessons.includes("lesson-four");
 ---
 
 <div class="course-header">
   <div class="back-btn">
     <BackBtn />
   </div>
-
   <span class="course-name">{title}</span>
 </div>
 
 <div class="map-wrapper">
   <div class="map">
-    <img src="/public/map-html.png" alt="map-html" />
+    <img src="/map-html.png" alt="map-html" />
   </div>
 
   <div class="leccion1-html">
-     <a href="/course/html/lesson-one">
-    <img src="/public/leccion1-html.png" alt="" />
+    <a href="/course/html/lesson-one">
+      <img src="/leccion1-html.png" alt="Lección 1" />
     </a>
   </div>
-  <div class="leccion2-html">
-     <a href="">
-    <img src="/public/leccion2-html.png" alt="" />
+
+  <div class={`leccion2-html ${!isLessonOneDone ? "is-locked" : ""}`}>
+    <a
+      href={isLessonOneDone ? "/course/html/lesson-two" : "javascript:void(0)"}
+    >
+      <img
+        src="/leccion2-html.png"
+        alt="Lección 2"
+        class={!isLessonOneDone ? "grayscale" : ""}
+      />
     </a>
   </div>
-  <div class="leccion3-html">
-    <a href="">
-    <img src="/public/leccion3-html.png" alt="" />
+
+  <div class={`leccion3-html ${!isLessonTwoDone ? "is-locked" : ""}`}>
+    <a
+      href={isLessonTwoDone
+        ? "/course/html/lesson-three"
+        : "javascript:void(0)"}
+    >
+      <img
+        src="/leccion3-html.png"
+        alt="Lección 3"
+        class={!isLessonTwoDone ? "grayscale" : ""}
+      />
     </a>
   </div>
-  <div class="leccion4-html">
-    <a href="">
-    <img src="/public/leccion4-html.png" alt="" />
+
+  <div class={`leccion4-html ${!isLessonThreeDone ? "is-locked" : ""}`}>
+    <a
+      href={isLessonThreeDone
+        ? "/course/html/lesson-four"
+        : "javascript:void(0)"}
+    >
+      <img
+        src="/leccion4-html.png"
+        alt="Lección 4"
+        class={!isLessonThreeDone ? "grayscale" : ""}
+      />
     </a>
   </div>
-  <div class="leccion5-html">
-    <a href="">
-    <img src="/public/html.png" alt="" />
+
+  <div class={`leccion5-html ${!isLessonFourDone ? "is-locked" : ""}`}>
+    <a
+      href={isLessonFourDone
+        ? "/course/html/lesson-five"
+        : "javascript:void(0)"}
+    >
+      <img
+        src="/html.png"
+        alt="Lección 5"
+        class={!isLessonFourDone ? "grayscale" : ""}
+      />
     </a>
   </div>
 </div>
@@ -247,5 +304,20 @@ import BackBtn from "@components/register-login/backBtn.astro";
       grid-column: 20 / 24;
       grid-row: 2;
     }
+  }
+
+  .grayscale {
+    filter: grayscale(100%);
+    opacity: 0.6;
+    transition: filter 0.3s ease;
+  }
+
+  .is-locked a {
+    cursor: not-allowed;
+  }
+
+  /* Opcional: un efecto visual de candado o prohibido */
+  .is-locked {
+    position: relative;
   }
 </style>
